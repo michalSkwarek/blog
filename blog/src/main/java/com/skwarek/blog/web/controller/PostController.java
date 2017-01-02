@@ -14,7 +14,6 @@ import java.util.List;
  * Created by Michal on 02/01/2017.
  */
 @Controller
-@RequestMapping(value = "/posts")
 public class PostController {
 
     private final static String VIEWS_POSTS_LIST = "posts_list";
@@ -25,7 +24,7 @@ public class PostController {
         this.postService = postService;
     }
 
-    @RequestMapping(value = "/list", method = RequestMethod.GET)
+    @RequestMapping(value = "/", method = RequestMethod.GET)
     public String showPosts(Model model) {
 
         List<Post> posts = postService.findAllPublishedPosts();

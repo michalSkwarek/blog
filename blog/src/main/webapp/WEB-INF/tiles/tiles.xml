@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC
+        "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
+        "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+<tiles-definitions>
+
+    <definition name="baseLayout" template="/WEB-INF/tiles/template/baseLayout.jsp">
+        <put-attribute name="header" value="/WEB-INF/tiles/template/header.jsp" />
+        <put-attribute name="content" value="" />
+    </definition>
+
+    <definition name="posts_list" extends="baseLayout">
+        <put-attribute name="title" value="All posts" />
+        <put-attribute name="content" value="/WEB-INF/views/posts_list.jsp" />
+    </definition>
+
+</tiles-definitions>

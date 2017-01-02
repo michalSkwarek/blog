@@ -16,7 +16,6 @@ import java.util.List;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
@@ -67,7 +66,7 @@ public class TestPostController {
     public void testSendingPostsToView() throws Exception {
         verify(postService, times(0)).findAllPublishedPosts();
 
-        mockMvc.perform(get("/posts/list"))
+        mockMvc.perform(get("/"))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("posts"))
                 .andExpect(model().attribute("posts", listOfPosts))
