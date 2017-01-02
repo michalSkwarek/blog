@@ -33,7 +33,7 @@ public class TestWelcomeController {
     }
 
     @Test
-    public void testSendHelloWorldToView() throws Exception {
+    public void testSendingHelloWorldToView() throws Exception {
         mockMvc.perform(get("/"))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("welcomeText"))
