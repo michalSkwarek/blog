@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
     <link href="//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" href="resources/css/blog.css?version=1" type="text/css"/>
+    <link rel="stylesheet" href="/resources/css/blog.css?version=1" type="text/css"/>
     <title><tiles:insertAttribute name="title"/></title>
 </head>
 <body>
