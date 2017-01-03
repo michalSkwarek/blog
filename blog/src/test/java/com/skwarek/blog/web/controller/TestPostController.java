@@ -87,7 +87,6 @@ public class TestPostController {
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("post"))
                 .andExpect(model().attribute("post", newPost))
-                .andExpect(model().attribute("post.title", newPost.getTitle()))
                 .andExpect(view().name("post_detail"));
 
         verify(postService, times(1)).read(1L);
@@ -114,6 +113,42 @@ public class TestPostController {
     @Test
     public void testProcessCreatePostFormHasErrors() throws Exception {
         mockMvc.perform(post("/post/new")
+                .param("title", "")
+                .param("text", "")
+        )
+                .andExpect(status().isOk())
+                .andExpect(model().attributeHasErrors("post"))
+                .andExpect(model().attributeHasFieldErrors("post", "title"))
+                .andExpect(model().attributeHasFieldErrors("post", "text"))
+                .andExpect(view().name("post_edit"));
+    }
+
+    @Test
+    public void testInitEditPostForm() throws Exception {
+        verify(postService, times(0)).read(1L);
+
+        mockMvc.perform(get("/post/1/edit"))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("post"))
+                .andExpect(model().attribute("post", newPost))
+                .andExpect(view().name("post_edit"));
+
+        verify(postService, times(1)).read(1L);
+    }
+
+    @Test
+    public void testProcessEditPostFormSuccess() throws Exception {
+        mockMvc.perform(post("/post/1/edit")
+                .param("title", "title1")
+                .param("text", "text1")
+        )
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/"));
+    }
+
+    @Test
+    public void testProcessEditPostFormHasErrors() throws Exception {
+        mockMvc.perform(post("/post/1/edit")
                 .param("title", "")
                 .param("text", "")
         )

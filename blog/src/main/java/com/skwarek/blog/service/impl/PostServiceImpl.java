@@ -5,8 +5,11 @@ import com.skwarek.blog.data.entity.Post;
 import com.skwarek.blog.service.PostService;
 import com.skwarek.blog.service.generic.GenericServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.List;
 

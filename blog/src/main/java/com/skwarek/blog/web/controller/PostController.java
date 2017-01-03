@@ -62,4 +62,23 @@ public class PostController {
         postService.createPost(post);
         return "redirect:/";
     }
+
+    @RequestMapping(value = "/post/{postId}/edit", method = RequestMethod.GET)
+    public String initEditPostForm(Model model, @PathVariable Long postId) {
+
+        Post post = postService.read(postId);
+        model.addAttribute("post", post);
+        return VIEWS_POST_FORM;
+    }
+
+    @RequestMapping(value = "/post/{postId}/edit", method = RequestMethod.POST)
+    public String processEditPostForm(@Valid Post post, BindingResult bindingResult, @PathVariable Long postId) {
+
+        if (bindingResult.hasErrors()) {
+            return VIEWS_POST_FORM;
+        }
+
+        postService.createPost(post);
+        return "redirect:/";
+    }
 }
