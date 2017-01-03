@@ -1,6 +1,6 @@
 package com.skwarek.blog.data.entity;
 
-import com.sun.istack.internal.NotNull;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -23,11 +23,11 @@ public class Post implements Serializable {
     @Column(name = "author")
     private String author;
 
-    @NotNull
+    @NotEmpty
     @Column(name = "title")
     private String title;
 
-    @NotNull
+    @NotEmpty
     @Column(name = "text")
     private String text;
 

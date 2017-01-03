@@ -16,6 +16,7 @@ import java.util.List;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
@@ -26,6 +27,8 @@ public class TestPostController {
 
     private List<Post> listOfPosts;
 
+    private Post newPost;
+    private Post otherPost;
     private PostService postService;
     private PostController postController;
 
@@ -33,7 +36,7 @@ public class TestPostController {
 
     @Before
     public void setUp() {
-        Post newPost = new Post();
+        newPost = new Post();
         newPost.setId(1L);
         newPost.setAuthor("author1");
         newPost.setTitle("title1");
@@ -41,7 +44,7 @@ public class TestPostController {
         newPost.setCreatedDate(new Date());
         newPost.setPublishedDate(new Date());
 
-        Post otherPost = new Post();
+        otherPost = new Post();
         otherPost.setId(2L);
         otherPost.setAuthor("author2");
         otherPost.setTitle("title2");
@@ -60,6 +63,7 @@ public class TestPostController {
                 .build();
 
         given(this.postService.findAllPublishedPosts()).willReturn(listOfPosts);
+        given(this.postService.read(1L)).willReturn(newPost);
     }
 
     @Test
@@ -73,5 +77,50 @@ public class TestPostController {
                 .andExpect(view().name("posts_list"));
 
         verify(postService, times(1)).findAllPublishedPosts();
+    }
+
+    @Test
+    public void testSendingPostToView() throws Exception {
+        verify(postService, times(0)).read(1L);
+
+        mockMvc.perform(get("/post/1"))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("post"))
+                .andExpect(model().attribute("post", newPost))
+                .andExpect(model().attribute("post.title", newPost.getTitle()))
+                .andExpect(view().name("post_detail"));
+
+        verify(postService, times(1)).read(1L);
+    }
+
+    @Test
+    public void testInitCreatePostForm() throws Exception {
+        mockMvc.perform(get("/post/new"))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("post"))
+                .andExpect(view().name("post_edit"));
+    }
+
+    @Test
+    public void testProcessCreatePostFormSuccess() throws Exception {
+        mockMvc.perform(post("/post/new")
+                .param("title", "title1")
+                .param("text", "text1")
+        )
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/"));
+    }
+
+    @Test
+    public void testProcessCreatePostFormHasErrors() throws Exception {
+        mockMvc.perform(post("/post/new")
+                .param("title", "")
+                .param("text", "")
+        )
+                .andExpect(status().isOk())
+                .andExpect(model().attributeHasErrors("post"))
+                .andExpect(model().attributeHasFieldErrors("post", "title"))
+                .andExpect(model().attributeHasFieldErrors("post", "text"))
+                .andExpect(view().name("post_edit"));
     }
 }

@@ -5,10 +5,12 @@ import com.skwarek.blog.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -51,7 +53,11 @@ public class PostController {
     }
 
     @RequestMapping(value = "/post/new", method = RequestMethod.POST)
-    public String processCreatePostForm(Post post) {
+    public String processCreatePostForm(@Valid Post post, BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            return VIEWS_POST_FORM;
+        }
 
         postService.createPost(post);
         return "redirect:/";
