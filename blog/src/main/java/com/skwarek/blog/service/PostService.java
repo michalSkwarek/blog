@@ -10,7 +10,9 @@ import java.util.List;
  */
 public interface PostService extends GenericService<Post, Long> {
 
-    public void publish(Post post);
+    void createPost(Post post);
+
+    void publishPost(Post post);
 
     List<Post> findAllPublishedPosts();
 }

@@ -19,4 +19,9 @@
         <put-attribute name="content" value="/WEB-INF/views/post_detail.jsp" />
     </definition>
 
+    <definition name="post_edit" extends="baseLayout">
+        <put-attribute name="title" value="Post content" />
+        <put-attribute name="content" value="/WEB-INF/views/post_edit.jsp" />
+    </definition>
+
 </tiles-definitions>

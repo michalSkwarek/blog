@@ -19,6 +19,7 @@ public class PostController {
 
     private final static String VIEWS_POSTS_LIST = "posts_list";
     private final static String VIEWS_POST_DETAIL = "post_detail";
+    private final static String VIEWS_POST_FORM = "post_edit";
     private final PostService postService;
 
     @Autowired
@@ -40,5 +41,19 @@ public class PostController {
         Post post = postService.read(postId);
         model.addAttribute("post", post);
         return VIEWS_POST_DETAIL;
+    }
+
+    @RequestMapping(value = "/post/new", method = RequestMethod.GET)
+    public String initCreatePostForm(Model model) {
+
+        model.addAttribute("post", new Post());
+        return VIEWS_POST_FORM;
+    }
+
+    @RequestMapping(value = "/post/new", method = RequestMethod.POST)
+    public String processCreatePostForm(Post post) {
+
+        postService.createPost(post);
+        return "redirect:/";
     }
 }

@@ -1,5 +1,7 @@
 package com.skwarek.blog.data.entity;
 
+import com.sun.istack.internal.NotNull;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -17,14 +19,21 @@ public class Post implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
+
     @Column(name = "author")
     private String author;
+
+    @NotNull
     @Column(name = "title")
     private String title;
+
+    @NotNull
     @Column(name = "text")
     private String text;
+
     @Column(name = "created_date")
     private Date createdDate;
+
     @Column(name = "published_date")
     private Date publishedDate;
 

@@ -14,7 +14,13 @@
 <section>
     <tiles:insertAttribute name="header"/>
 
-    <tiles:insertAttribute name="content"/>
+    <div class="content container">
+        <div class="row">
+            <div class="col-md-8">
+                <tiles:insertAttribute name="content"/>
+            </div>
+        </div>
+    </div>
 </section>
 </body>
 </html>

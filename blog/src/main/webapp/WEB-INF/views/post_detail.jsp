@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <div class="post">
     <c:if test="${post.publishedDate != null}">
         <p class="date">published: ${post.publishedDate}</p>

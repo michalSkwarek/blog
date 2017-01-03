@@ -20,12 +20,19 @@ public class PostServiceImpl extends GenericServiceImpl<Post, Long> implements P
     private PostDao postDao;
 
     @Override
-    public void publish(Post post) {
+    public void createPost(Post post) {
+        post.setCreatedDate(new Date());
+        postDao.create(post);
+    }
+
+    @Override
+    public void publishPost(Post post) {
         post.setPublishedDate(new Date());
         postDao.create(post);
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<Post> findAllPublishedPosts() {
         return postDao.findAllPublishedPosts();
     }
