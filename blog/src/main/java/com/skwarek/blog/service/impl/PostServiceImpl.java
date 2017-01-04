@@ -1,6 +1,7 @@
 package com.skwarek.blog.service.impl;
 
 import com.skwarek.blog.data.dao.PostDao;
+import com.skwarek.blog.data.entity.Comment;
 import com.skwarek.blog.data.entity.Post;
 import com.skwarek.blog.service.PostService;
 import com.skwarek.blog.service.generic.GenericServiceImpl;
@@ -23,27 +24,9 @@ public class PostServiceImpl extends GenericServiceImpl<Post, Long> implements P
     private PostDao postDao;
 
     @Override
-    public void createPost(Post post) {
-        post.setCreatedDate(new Date());
-        postDao.create(post);
-    }
-
-    @Override
-    public void publishPost(Post post) {
-        post.setPublishedDate(new Date());
-        postDao.create(post);
-    }
-
-    @Override
     @SuppressWarnings("unchecked")
     public List<Post> findAllPublishedPosts() {
         return postDao.findAllPublishedPosts();
-    }
-
-    @Override
-    public void updatePost(Post post) {
-        post.setCreatedDate(new Date());
-        postDao.update(post);
     }
 
     @Override
@@ -53,7 +36,31 @@ public class PostServiceImpl extends GenericServiceImpl<Post, Long> implements P
     }
 
     @Override
+    @SuppressWarnings("unchecked")
+    public List<Comment> findAllComments(Post post) {
+        return postDao.findAllComments(post);
+    }
+
+    @Override
     public int getApprovedCommentsCounter(Post post) {
         return postDao.getApprovedCommentsCounter(post);
+    }
+
+    @Override
+    public void createPost(Post post) {
+        post.setCreatedDate(new Date());
+        postDao.create(post);
+    }
+
+    @Override
+    public void updatePost(Post post) {
+        post.setCreatedDate(new Date());
+        postDao.update(post);
+    }
+
+    @Override
+    public void publishPost(Post post) {
+        post.setPublishedDate(new Date());
+        postDao.create(post);
     }
 }

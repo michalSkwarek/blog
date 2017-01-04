@@ -1,5 +1,6 @@
 package com.skwarek.blog.web.controller;
 
+import com.skwarek.blog.data.entity.Comment;
 import com.skwarek.blog.data.entity.Post;
 import com.skwarek.blog.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +43,7 @@ public class PostController {
     }
 
     @RequestMapping(value = "/drafts", method = RequestMethod.GET)
-    public String showDraftsPosts(Model model) {
+    public String showDrafts(Model model) {
 
         List<Post> posts = postService.findAllDrafts();
         model.addAttribute("posts", posts);
@@ -50,10 +51,13 @@ public class PostController {
     }
 
     @RequestMapping(value = "/post/{postId}", method = RequestMethod.GET)
-    public String showPost(Model model, @PathVariable Long postId) {
+    public String showPost(Model model, @PathVariable long postId) {
 
         Post post = postService.read(postId);
         model.addAttribute("post", post);
+
+        List<Comment> comments = postService.findAllComments(post);
+        model.addAttribute("comments", comments);
         return VIEWS_POST_DETAIL;
     }
 
@@ -76,7 +80,7 @@ public class PostController {
     }
 
     @RequestMapping(value = "/post/{postId}/edit", method = RequestMethod.GET)
-    public String initEditPostForm(Model model, @PathVariable Long postId) {
+    public String initEditPostForm(Model model, @PathVariable long postId) {
 
         Post post = postService.read(postId);
         model.addAttribute("post", post);
@@ -84,7 +88,7 @@ public class PostController {
     }
 
     @RequestMapping(value = "/post/{postId}/edit", method = RequestMethod.POST)
-    public String processEditPostForm(@Valid Post post, BindingResult bindingResult, @PathVariable Long postId) {
+    public String processEditPostForm(@Valid Post post, BindingResult bindingResult, @PathVariable long postId) {
 
         if (bindingResult.hasErrors()) {
             return VIEWS_POST_FORM;

@@ -1,5 +1,6 @@
 package com.skwarek.blog.service;
 
+import com.skwarek.blog.data.entity.Comment;
 import com.skwarek.blog.data.entity.Post;
 import com.skwarek.blog.service.generic.GenericService;
 
@@ -10,15 +11,17 @@ import java.util.List;
  */
 public interface PostService extends GenericService<Post, Long> {
 
-    void createPost(Post post);
-
-    void publishPost(Post post);
-
     List<Post> findAllPublishedPosts();
-
-    void updatePost(Post post);
 
     List<Post> findAllDrafts();
 
+    List<Comment> findAllComments(Post post);
+
     int getApprovedCommentsCounter(Post post);
+
+    void createPost(Post post);
+
+    void updatePost(Post post);
+
+    void publishPost(Post post);
 }
