@@ -2,9 +2,7 @@ package com.skwarek.blog.data.dao.impl;
 
 import com.skwarek.blog.data.dao.PostDao;
 import com.skwarek.blog.data.dao.generic.GenericDaoImpl;
-import com.skwarek.blog.data.entity.Comment;
 import com.skwarek.blog.data.entity.Post;
-import javafx.geometry.Pos;
 import org.hibernate.Query;
 import org.springframework.stereotype.Repository;
 
@@ -44,16 +42,19 @@ public class PostDaoImpl extends GenericDaoImpl<Post, Long> implements PostDao {
 
     @Override
     public boolean removePost(long postId) {
-        Query findPost = getSession().createQuery("from Post p where p.id = :id ");
-        findPost.setParameter("id", postId);
-        Post post = (Post) findPost.list().get(0);
+        removeCommentsFromPost(postId);
 
-        for (Comment comment : post.getComments()) {
-            getSession().delete(comment);
-        }
+        getSession().flush();
 
         Query removePost = getSession().createQuery("delete from Post p where p.id = :id");
         removePost.setParameter("id", postId);
         return removePost.executeUpdate() > 0;
+    }
+
+    private void removeCommentsFromPost(long postId) {
+        Query findPost = getSession().createQuery("from Post p where p.id = :id ");
+        findPost.setParameter("id", postId);
+        Post post = (Post) findPost.list().get(0);
+        post.getComments().clear();
     }
 }

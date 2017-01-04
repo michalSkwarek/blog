@@ -5,6 +5,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -34,8 +35,8 @@ public class Post extends BaseEntity implements Serializable {
     @Column(name = "published_date")
     private Date publishedDate;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "post")
-    private List<Comment> comments;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY, mappedBy = "post")
+    private List<Comment> comments = new ArrayList<>();
 
     @Transient
     private int approvedCommentsCounter;

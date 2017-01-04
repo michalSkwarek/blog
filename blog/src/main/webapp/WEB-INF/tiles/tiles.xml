@@ -34,4 +34,9 @@
         <put-attribute name="content" value="/WEB-INF/views/registration/login.jsp" />
     </definition>
 
+    <definition name="blog/add_comment_to_post" extends="baseLayout">
+        <put-attribute name="title" value="Add comment" />
+        <put-attribute name="content" value="/WEB-INF/views/blog/add_comment_to_post.jsp" />
+    </definition>
+
 </tiles-definitions>

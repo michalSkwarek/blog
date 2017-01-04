@@ -1,6 +1,7 @@
 package com.skwarek.blog.data.entity;
 
 import org.hibernate.annotations.Type;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -15,8 +16,10 @@ public class Comment extends BaseEntity implements Serializable {
 
     private static final long serialVersionUID = -7098117967486832113L;
 
+    @NotEmpty
     private String author;
 
+    @NotEmpty
     @Type(type = "text")
     private String text;
 
@@ -26,7 +29,7 @@ public class Comment extends BaseEntity implements Serializable {
     @Column(name = "approved_comment")
     private boolean approvedComment;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "post_id")
     private Post post;
 

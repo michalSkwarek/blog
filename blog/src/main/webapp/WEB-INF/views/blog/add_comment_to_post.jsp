@@ -2,8 +2,6 @@
 
 <h1>New comment</h1>
 <form:form modelAttribute="comment" method="post" class="post-form">
-    <form:hidden path="id" />
-
     <p>Author:</p>
     <form:errors path="author" />
     <form:input path="author" id="author"/>
@@ -12,10 +10,6 @@
     <form:errors path="text" />
     <form:input path="text" id="text"/>
     <%--<textarea name="text" rows="10"></textarea>--%>
-
-    <%--<form:hidden path="createdDate" />--%>
-
-    <%--<form:hidden path="publishedDate" />--%>
 
     <button type="submit" class="save btn btn-default">Send</button>
 </form:form>
