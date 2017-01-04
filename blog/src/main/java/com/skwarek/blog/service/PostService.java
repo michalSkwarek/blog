@@ -15,4 +15,6 @@ public interface PostService extends GenericService<Post, Long> {
     void publishPost(Post post);
 
     List<Post> findAllPublishedPosts();
+
+    void updatePost(Post post);
 }

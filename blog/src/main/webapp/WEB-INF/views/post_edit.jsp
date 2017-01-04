@@ -1,14 +1,23 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
 <h1>New post</h1>
-<form method="post" class="post-form">
-    <input type="hidden" name="author" value="${pageContext.request.userPrincipal.name}">
+<form:form modelAttribute="post" method="post" class="post-form">
+    <form:hidden path="id" />
+
+    <form:hidden path="author" id="author" value="${pageContext.request.userPrincipal.name}"/>
 
     <p>Title:</p>
-    <input type="text" name="title"/>
+    <form:errors path="title" />
+    <form:input path="title" id="title"/>
 
     <p>Text:</p>
-    <textarea name="text" rows="10"></textarea>
+    <form:errors path="text" />
+    <form:input path="text" id="text"/>
+    <%--<textarea name="text" rows="10"></textarea>--%>
+
+    <%--<form:hidden path="createdDate" />--%>
+
+    <%--<form:hidden path="publishedDate" />--%>
 
     <button type="submit" class="save btn btn-default">Save</button>
-</form>
+</form:form>

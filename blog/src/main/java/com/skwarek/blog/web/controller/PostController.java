@@ -75,10 +75,12 @@ public class PostController {
     public String processEditPostForm(@Valid Post post, BindingResult bindingResult, @PathVariable Long postId) {
 
         if (bindingResult.hasErrors()) {
+            System.out.println(" - dupa1" + post.getId() + bindingResult.getErrorCount() + " " + bindingResult.getAllErrors());
             return VIEWS_POST_FORM;
         }
 
-        postService.createPost(post);
+        System.out.println(" - dupa");
+        postService.update(post);
         return "redirect:/";
     }
 }

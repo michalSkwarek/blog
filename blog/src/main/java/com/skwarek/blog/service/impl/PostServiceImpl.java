@@ -39,4 +39,10 @@ public class PostServiceImpl extends GenericServiceImpl<Post, Long> implements P
     public List<Post> findAllPublishedPosts() {
         return postDao.findAllPublishedPosts();
     }
+
+    @Override
+    public void updatePost(Post post) {
+        post.setCreatedDate(new Date());
+        postDao.update(post);
+    }
 }
