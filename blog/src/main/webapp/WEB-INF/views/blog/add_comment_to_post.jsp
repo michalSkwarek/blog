@@ -4,11 +4,9 @@
 <form:form modelAttribute="comment" method="post" class="post-form">
     <form:hidden path="id" />
 
-    <form:hidden path="author" id="author" value="${pageContext.request.userPrincipal.name}"/>
-
-    <p>Title:</p>
-    <form:errors path="title" />
-    <form:input path="title" id="title"/>
+    <p>Author:</p>
+    <form:errors path="author" />
+    <form:input path="author" id="author"/>
 
     <p>Text:</p>
     <form:errors path="text" />
@@ -19,5 +17,5 @@
 
     <%--<form:hidden path="publishedDate" />--%>
 
-    <button type="submit" class="save btn btn-default">Save</button>
+    <button type="submit" class="save btn btn-default">Send</button>
 </form:form>

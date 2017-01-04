@@ -1,5 +1,6 @@
 package com.skwarek.blog.service.impl;
 
+import com.skwarek.blog.data.dao.CommentDao;
 import com.skwarek.blog.data.dao.PostDao;
 import com.skwarek.blog.data.entity.Comment;
 import com.skwarek.blog.data.entity.Post;
@@ -22,6 +23,9 @@ public class PostServiceImpl extends GenericServiceImpl<Post, Long> implements P
 
     @Autowired
     private PostDao postDao;
+
+    @Autowired
+    private CommentDao commentDao;
 
     @Override
     @SuppressWarnings("unchecked")
@@ -53,14 +57,21 @@ public class PostServiceImpl extends GenericServiceImpl<Post, Long> implements P
     }
 
     @Override
-    public void updatePost(Post post) {
-        post.setCreatedDate(new Date());
+    public void publishPost(Post post) {
+        post.setPublishedDate(new Date());
         postDao.update(post);
     }
 
     @Override
-    public void publishPost(Post post) {
-        post.setPublishedDate(new Date());
-        postDao.create(post);
+    public void addCommentToPost(Comment comment, long postId) {
+        comment.setCreatedDate(new Date());
+        comment.setApprovedComment(false);
+        comment.setPost(postDao.read(postId));
+        commentDao.create(comment);
+    }
+
+    @Override
+    public boolean removePost(long postId) {
+        return postDao.removePost(postId);
     }
 }

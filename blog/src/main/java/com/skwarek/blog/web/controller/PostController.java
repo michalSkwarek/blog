@@ -3,6 +3,7 @@ package com.skwarek.blog.web.controller;
 import com.skwarek.blog.data.entity.Comment;
 import com.skwarek.blog.data.entity.Post;
 import com.skwarek.blog.service.PostService;
+import javafx.geometry.Pos;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,6 +25,7 @@ public class PostController {
     private final static String VIEWS_DRAFTS = "blog/post_draft_list";
     private final static String VIEWS_POST_DETAIL = "blog/post_detail";
     private final static String VIEWS_POST_FORM = "blog/post_edit";
+    private final static String VIEWS_COMMENT_FORM = "blog/add_comment_to_post";
     private final PostService postService;
 
     @Autowired
@@ -96,5 +98,39 @@ public class PostController {
 
         postService.update(post);
         return "redirect:/";
+    }
+
+    @RequestMapping(value = "post/{postId}/publish", method = RequestMethod.GET)
+    public String publishPost(Model model, @PathVariable long postId) {
+
+        Post post = postService.read(postId);
+        postService.publishPost(post);
+        model.addAttribute("post", post);
+        return VIEWS_POST_DETAIL;
+    }
+
+    @RequestMapping(value = "/post/{postId}/remove", method = RequestMethod.GET)
+    public String removePost(@PathVariable long postId) {
+
+        postService.removePost(postId);
+        return "redirect:/";
+    }
+
+    @RequestMapping(value = "/post/{postId}/comment", method = RequestMethod.GET)
+    public String initCreateCommentForm(Model model, @PathVariable long postId) {
+
+        model.addAttribute("comment", new Comment());
+        return VIEWS_COMMENT_FORM;
+    }
+
+    @RequestMapping(value = "/post/{postId}/comment", method = RequestMethod.POST)
+    public String processCreateCommentForm(@Valid Comment comment, BindingResult bindingResult, @PathVariable long postId) {
+
+        if (bindingResult.hasErrors()) {
+            return VIEWS_COMMENT_FORM;
+        }
+
+        postService.addCommentToPost(comment, postId);
+        return "redirect:/post/" + postId;
     }
 }

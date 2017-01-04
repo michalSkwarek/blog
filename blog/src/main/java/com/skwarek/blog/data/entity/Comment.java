@@ -26,7 +26,7 @@ public class Comment extends BaseEntity implements Serializable {
     @Column(name = "approved_comment")
     private boolean approvedComment;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
     private Post post;
 

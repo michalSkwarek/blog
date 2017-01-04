@@ -18,4 +18,6 @@ public interface PostDao extends GenericDao<Post, Long> {
     List findAllComments(Post post);
 
     int getApprovedCommentsCounter(Post post);
+
+    boolean removePost(long postId);
 }
