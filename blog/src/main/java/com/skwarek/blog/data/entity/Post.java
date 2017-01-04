@@ -1,5 +1,6 @@
 package com.skwarek.blog.data.entity;
 
+import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
@@ -11,24 +12,17 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "post")
-public class Post implements Serializable {
+public class Post extends BaseEntity implements Serializable {
 
     private static final long serialVersionUID = -7880798132853619385L;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Long id;
-
-    @Column(name = "author")
     private String author;
 
     @NotEmpty
-    @Column(name = "title")
     private String title;
 
     @NotEmpty
-    @Column(name = "text")
+    @Type(type = "text")
     private String text;
 
     @Column(name = "created_date")
@@ -38,14 +32,6 @@ public class Post implements Serializable {
     private Date publishedDate;
 
     public Post() { }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getAuthor() {
         return author;

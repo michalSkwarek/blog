@@ -1,5 +1,7 @@
 package com.skwarek.blog.data.entity;
 
+import org.hibernate.annotations.Type;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -9,30 +11,26 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "comment")
-public class Comment implements Serializable {
+public class Comment extends BaseEntity implements Serializable {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Long id;
-    @Column(name = "author")
+    private static final long serialVersionUID = -7098117967486832113L;
+
     private String author;
-    @Column(name = "text")
+
+    @Type(type = "text")
     private String text;
+
     @Column(name = "created_date")
-    private Date cretaedDate;
+    private Date createdDate;
+
     @Column(name = "approved_comment")
     private boolean approvedComment;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "post_id")
+    private Post post;
+
     public Comment() { }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getAuthor() {
         return author;
@@ -50,12 +48,12 @@ public class Comment implements Serializable {
         this.text = text;
     }
 
-    public Date getCretaedDate() {
-        return cretaedDate;
+    public Date getCreatedDate() {
+        return createdDate;
     }
 
-    public void setCretaedDate(Date cretaedDate) {
-        this.cretaedDate = cretaedDate;
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
     }
 
     public boolean isApprovedComment() {
@@ -76,7 +74,8 @@ public class Comment implements Serializable {
         if (approvedComment != comment.approvedComment) return false;
         if (author != null ? !author.equals(comment.author) : comment.author != null) return false;
         if (text != null ? !text.equals(comment.text) : comment.text != null) return false;
-        return cretaedDate != null ? cretaedDate.equals(comment.cretaedDate) : comment.cretaedDate == null;
+        if (createdDate != null ? !createdDate.equals(comment.createdDate) : comment.createdDate != null) return false;
+        return post != null ? post.equals(comment.post) : comment.post == null;
 
     }
 
@@ -84,8 +83,9 @@ public class Comment implements Serializable {
     public int hashCode() {
         int result = author != null ? author.hashCode() : 0;
         result = 31 * result + (text != null ? text.hashCode() : 0);
-        result = 31 * result + (cretaedDate != null ? cretaedDate.hashCode() : 0);
+        result = 31 * result + (createdDate != null ? createdDate.hashCode() : 0);
         result = 31 * result + (approvedComment ? 1 : 0);
+        result = 31 * result + (post != null ? post.hashCode() : 0);
         return result;
     }
 
