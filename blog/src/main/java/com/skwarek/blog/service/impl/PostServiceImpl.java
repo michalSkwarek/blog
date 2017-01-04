@@ -51,4 +51,9 @@ public class PostServiceImpl extends GenericServiceImpl<Post, Long> implements P
     public List<Post> findAllDrafts() {
         return postDao.findAllDrafts();
     }
+
+    @Override
+    public int getApprovedCommentsCounter(Post post) {
+        return postDao.getApprovedCommentsCounter(post);
+    }
 }

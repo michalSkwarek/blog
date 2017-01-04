@@ -25,4 +25,11 @@ public class PostDaoImpl extends GenericDaoImpl<Post, Long> implements PostDao {
         Query listOfPosts = getSession().createQuery("from Post p where p.publishedDate is null order by p.createdDate asc");
         return listOfPosts.list();
     }
+
+    @Override
+    public int getApprovedCommentsCounter(Post post) {
+        Query approvedComments = getSession().createQuery("from Comment c where c.post = :post and c.approvedComment = true");
+        approvedComments.setParameter("post", post);
+        return approvedComments.list().size();
+    }
 }

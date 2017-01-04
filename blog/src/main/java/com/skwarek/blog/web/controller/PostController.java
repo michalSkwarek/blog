@@ -19,8 +19,8 @@ import java.util.List;
 @Controller
 public class PostController {
 
-    private final static String VIEWS_POSTS_LIST = "blog/posts_list";
-    private final static String VIEWS_DRAFTS = "blog/posts_draft_list";
+    private final static String VIEWS_POSTS_LIST = "blog/post_list";
+    private final static String VIEWS_DRAFTS = "blog/post_draft_list";
     private final static String VIEWS_POST_DETAIL = "blog/post_detail";
     private final static String VIEWS_POST_FORM = "blog/post_edit";
     private final PostService postService;
@@ -34,6 +34,9 @@ public class PostController {
     public String showPublishedPosts(Model model) {
 
         List<Post> posts = postService.findAllPublishedPosts();
+        for (Post post : posts) {
+            post.setApprovedCommentsCounter(postService.getApprovedCommentsCounter(post));
+        }
         model.addAttribute("posts", posts);
         return VIEWS_POSTS_LIST;
     }

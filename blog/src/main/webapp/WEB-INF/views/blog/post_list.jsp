@@ -5,5 +5,6 @@
         <p class="date">published: ${post.publishedDate}</p>
         <h1><a href="/post/${post.id}">${post.title}</a></h1>
         <p>${post.text}</p>
+        <a href="/post/${post.id}">Comments: ${post.approvedCommentsCounter}</a>
     </div>
 </c:forEach>

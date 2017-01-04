@@ -33,6 +33,9 @@ public class Post extends BaseEntity implements Serializable {
     @Column(name = "published_date")
     private Date publishedDate;
 
+    @Transient
+    private int approvedCommentsCounter;
+
     public Post() { }
 
     public User getAuthor() {
@@ -73,6 +76,14 @@ public class Post extends BaseEntity implements Serializable {
 
     public void setPublishedDate(Date publishedDate) {
         this.publishedDate = publishedDate;
+    }
+
+    public int getApprovedCommentsCounter() {
+        return approvedCommentsCounter;
+    }
+
+    public void setApprovedCommentsCounter(int approvedCommentsCounter) {
+        this.approvedCommentsCounter = approvedCommentsCounter;
     }
 
     @Override
