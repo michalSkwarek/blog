@@ -19,9 +19,9 @@ import java.util.List;
 @Controller
 public class PostController {
 
-    private final static String VIEWS_POSTS_LIST = "posts_list";
-    private final static String VIEWS_POST_DETAIL = "post_detail";
-    private final static String VIEWS_POST_FORM = "post_edit";
+    private final static String VIEWS_POSTS_LIST = "blog/posts_list";
+    private final static String VIEWS_POST_DETAIL = "blog/post_detail";
+    private final static String VIEWS_POST_FORM = "blog/post_edit";
     private final PostService postService;
 
     @Autowired
@@ -75,11 +75,9 @@ public class PostController {
     public String processEditPostForm(@Valid Post post, BindingResult bindingResult, @PathVariable Long postId) {
 
         if (bindingResult.hasErrors()) {
-            System.out.println(" - dupa1" + post.getId() + bindingResult.getErrorCount() + " " + bindingResult.getAllErrors());
             return VIEWS_POST_FORM;
         }
 
-        System.out.println(" - dupa");
         postService.update(post);
         return "redirect:/";
     }

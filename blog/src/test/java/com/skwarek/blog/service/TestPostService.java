@@ -2,6 +2,7 @@ package com.skwarek.blog.service;
 
 import com.skwarek.blog.data.dao.PostDao;
 import com.skwarek.blog.data.entity.Post;
+import com.skwarek.blog.data.entity.User;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,17 +28,23 @@ public class TestPostService {
 
     @Before
     public void setUp() {
+        User user1 = new User();
+        user1.setUsername("user1");
+
         Post newPost = new Post();
         newPost.setId(1L);
-        newPost.setAuthor("author1");
+        newPost.setAuthor(user1);
         newPost.setTitle("title1");
         newPost.setText("text1");
         newPost.setCreatedDate(new Date());
         newPost.setPublishedDate(new Date());
 
+        User user2 = new User();
+        user2.setUsername("user2");
+
         Post otherPost = new Post();
         otherPost.setId(2L);
-        otherPost.setAuthor("author2");
+        otherPost.setAuthor(user2);
         otherPost.setTitle("title2");
         otherPost.setText("text2");
         otherPost.setCreatedDate(new Date());

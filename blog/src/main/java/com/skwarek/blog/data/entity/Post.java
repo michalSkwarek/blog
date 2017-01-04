@@ -16,7 +16,9 @@ public class Post extends BaseEntity implements Serializable {
 
     private static final long serialVersionUID = -7880798132853619385L;
 
-    private String author;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "author_id")
+    private User author;
 
     @NotEmpty
     private String title;
@@ -33,11 +35,11 @@ public class Post extends BaseEntity implements Serializable {
 
     public Post() { }
 
-    public String getAuthor() {
+    public User getAuthor() {
         return author;
     }
 
-    public void setAuthor(String author) {
+    public void setAuthor(User author) {
         this.author = author;
     }
 

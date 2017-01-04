@@ -9,19 +9,24 @@
         <put-attribute name="content" value="" />
     </definition>
 
-    <definition name="posts_list" extends="baseLayout">
+    <definition name="blog/posts_list" extends="baseLayout">
         <put-attribute name="title" value="All posts" />
-        <put-attribute name="content" value="/WEB-INF/views/posts_list.jsp" />
+        <put-attribute name="content" value="/WEB-INF/views/blog/posts_list.jsp" />
     </definition>
 
-    <definition name="post_detail" extends="baseLayout">
+    <definition name="blog/post_detail" extends="baseLayout">
         <put-attribute name="title" value="Post detail" />
-        <put-attribute name="content" value="/WEB-INF/views/post_detail.jsp" />
+        <put-attribute name="content" value="/WEB-INF/views/blog/post_detail.jsp" />
     </definition>
 
-    <definition name="post_edit" extends="baseLayout">
+    <definition name="blog/post_edit" extends="baseLayout">
         <put-attribute name="title" value="Post content" />
-        <put-attribute name="content" value="/WEB-INF/views/post_edit.jsp" />
+        <put-attribute name="content" value="/WEB-INF/views/blog/post_edit.jsp" />
+    </definition>
+
+    <definition name="registration/login" extends="baseLayout">
+        <put-attribute name="title" value="Login" />
+        <put-attribute name="content" value="/WEB-INF/views/registration/login.jsp" />
     </definition>
 
 </tiles-definitions>
