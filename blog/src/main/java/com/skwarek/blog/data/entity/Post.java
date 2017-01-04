@@ -114,8 +114,6 @@ public class Post implements Serializable {
 
     @Override
     public String toString() {
-        return "Post{" +
-                "title='" + title +
-                '}';
+        return title;
     }
 }
