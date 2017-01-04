@@ -45,4 +45,10 @@ public class PostServiceImpl extends GenericServiceImpl<Post, Long> implements P
         post.setCreatedDate(new Date());
         postDao.update(post);
     }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<Post> findAllDrafts() {
+        return postDao.findAllDrafts();
+    }
 }

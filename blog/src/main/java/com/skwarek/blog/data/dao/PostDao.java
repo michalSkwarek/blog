@@ -11,4 +11,6 @@ import java.util.List;
 public interface PostDao extends GenericDao<Post, Long> {
 
     List findAllPublishedPosts();
+
+    List findAllDrafts();
 }

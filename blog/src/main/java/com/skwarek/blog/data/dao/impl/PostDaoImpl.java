@@ -19,4 +19,10 @@ public class PostDaoImpl extends GenericDaoImpl<Post, Long> implements PostDao {
         Query listOfPosts = getSession().createQuery("from Post p where p.publishedDate is not null order by p.publishedDate asc");
         return listOfPosts.list();
     }
+
+    @Override
+    public List findAllDrafts() {
+        Query listOfPosts = getSession().createQuery("from Post p where p.publishedDate is null order by p.createdDate asc");
+        return listOfPosts.list();
+    }
 }

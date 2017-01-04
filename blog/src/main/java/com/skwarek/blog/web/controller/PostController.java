@@ -20,6 +20,7 @@ import java.util.List;
 public class PostController {
 
     private final static String VIEWS_POSTS_LIST = "blog/posts_list";
+    private final static String VIEWS_DRAFTS = "blog/posts_draft_list";
     private final static String VIEWS_POST_DETAIL = "blog/post_detail";
     private final static String VIEWS_POST_FORM = "blog/post_edit";
     private final PostService postService;
@@ -30,11 +31,19 @@ public class PostController {
     }
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
-    public String showPosts(Model model) {
+    public String showPublishedPosts(Model model) {
 
         List<Post> posts = postService.findAllPublishedPosts();
         model.addAttribute("posts", posts);
         return VIEWS_POSTS_LIST;
+    }
+
+    @RequestMapping(value = "/drafts", method = RequestMethod.GET)
+    public String showDraftsPosts(Model model) {
+
+        List<Post> posts = postService.findAllDrafts();
+        model.addAttribute("posts", posts);
+        return VIEWS_DRAFTS;
     }
 
     @RequestMapping(value = "/post/{postId}", method = RequestMethod.GET)

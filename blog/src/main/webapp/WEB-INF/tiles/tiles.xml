@@ -14,6 +14,11 @@
         <put-attribute name="content" value="/WEB-INF/views/blog/posts_list.jsp" />
     </definition>
 
+    <definition name="blog/posts_draft_list" extends="baseLayout">
+        <put-attribute name="title" value="All drafts" />
+        <put-attribute name="content" value="/WEB-INF/views/blog/posts_draft_list.jsp" />
+    </definition>
+
     <definition name="blog/post_detail" extends="baseLayout">
         <put-attribute name="title" value="Post detail" />
         <put-attribute name="content" value="/WEB-INF/views/blog/post_detail.jsp" />
