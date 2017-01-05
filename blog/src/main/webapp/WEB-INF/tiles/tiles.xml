@@ -4,38 +4,31 @@
         "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
 <tiles-definitions>
 
-    <definition name="baseLayout" template="/WEB-INF/tiles/template/baseLayout.jsp">
-        <put-attribute name="header" value="/WEB-INF/tiles/template/header.jsp" />
+    <definition name="base" template="/WEB-INF/tiles/template/base.jsp">
         <put-attribute name="content" value="" />
     </definition>
 
-    <definition name="blog/post_list" extends="baseLayout">
-        <put-attribute name="title" value="All posts" />
+    <definition name="blog/post_list" extends="base">
         <put-attribute name="content" value="/WEB-INF/views/blog/post_list.jsp" />
     </definition>
 
-    <definition name="blog/post_draft_list" extends="baseLayout">
-        <put-attribute name="title" value="All drafts" />
+    <definition name="blog/post_draft_list" extends="base">
         <put-attribute name="content" value="/WEB-INF/views/blog/post_draft_list.jsp" />
     </definition>
 
-    <definition name="blog/post_detail" extends="baseLayout">
-        <put-attribute name="title" value="Post detail" />
+    <definition name="blog/post_detail" extends="base">
         <put-attribute name="content" value="/WEB-INF/views/blog/post_detail.jsp" />
     </definition>
 
-    <definition name="blog/post_edit" extends="baseLayout">
-        <put-attribute name="title" value="Post content" />
+    <definition name="blog/post_edit" extends="base">
         <put-attribute name="content" value="/WEB-INF/views/blog/post_edit.jsp" />
     </definition>
 
-    <definition name="registration/login" extends="baseLayout">
-        <put-attribute name="title" value="Login" />
+    <definition name="registration/login" extends="base">
         <put-attribute name="content" value="/WEB-INF/views/registration/login.jsp" />
     </definition>
 
-    <definition name="blog/add_comment_to_post" extends="baseLayout">
-        <put-attribute name="title" value="Add comment" />
+    <definition name="blog/add_comment_to_post" extends="base">
         <put-attribute name="content" value="/WEB-INF/views/blog/add_comment_to_post.jsp" />
     </definition>
 
