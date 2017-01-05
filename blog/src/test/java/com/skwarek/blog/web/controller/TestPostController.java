@@ -8,7 +8,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
+import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.stubbing.Answer;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -37,7 +39,7 @@ public class TestPostController {
 
     private final static String REDIRECT_TO = "redirect:";
     private final static String HOME_PAGE = "/";
-    private final static String POST_DETAIL_PAGE = "/post";
+    private final static String POST_PAGE = "/post";
 
     private final static long NON_EXISTENT_HIBERNATE_ID = 0;
 
@@ -57,7 +59,7 @@ public class TestPostController {
 
     private Post firstPublishedPost;
     private Post secondPublishedPost;
-    private Post firstDraftPost;
+    private Post draftPost;
 
     private List<Post> listOfPublishedPosts;
     private List<Post> listOfDraftPosts;
@@ -98,15 +100,15 @@ public class TestPostController {
         this.listOfPublishedPosts.add(firstPublishedPost);
         this.listOfPublishedPosts.add(secondPublishedPost);
 
-        this.firstDraftPost = new Post();
-        this.firstDraftPost.setId(DRAFT_POST_ID);
-        this.firstDraftPost.setAuthor(firstUser);
-        this.firstDraftPost.setTitle("title3");
-        this.firstDraftPost.setText("text3");
-        this.firstDraftPost.setCreatedDate(CREATED_DATE);
+        this.draftPost = new Post();
+        this.draftPost.setId(DRAFT_POST_ID);
+        this.draftPost.setAuthor(firstUser);
+        this.draftPost.setTitle("title3");
+        this.draftPost.setText("text3");
+        this.draftPost.setCreatedDate(CREATED_DATE);
 
         this.listOfDraftPosts = new ArrayList<>();
-        this.listOfDraftPosts.add(firstDraftPost);
+        this.listOfDraftPosts.add(draftPost);
 
         this.firstApprovedComment = new Comment();
         this.firstApprovedComment.setId(APPROVED_COMMENT_ID);
@@ -134,13 +136,21 @@ public class TestPostController {
         given(this.postService.read(FIRST_PUBLISHED_POST_ID)).willReturn(firstPublishedPost);
 
         given(this.postService.findAllDrafts()).willReturn(listOfDraftPosts);
-        given(this.postService.read(DRAFT_POST_ID)).willReturn(firstDraftPost);
+        given(this.postService.read(DRAFT_POST_ID)).willReturn(draftPost);
+
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
+                draftPost.setPublishedDate(PUBLISHED_DATE);
+                return null;
+            }
+        }).when(postService).publishPost(draftPost);
 
         given(this.postService.read(NON_EXISTENT_POST_ID)).willReturn(null);
     }
 
     @Test
-    public void testSendingListOfPublishedPostsToView() throws Exception {
+    public void showPublishedPosts_ShouldAddPostEntriesToModelAndRenderPostListView() throws Exception {
         mockMvc.perform(get("/"))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("posts"))
@@ -206,7 +216,7 @@ public class TestPostController {
     }
 
     @Test
-    public void showEmptyPost() throws Exception {
+    public void showPost_PostEntryNotFound_ShouldRenderEmptyView() throws Exception {
         mockMvc.perform(get("/post/{postId}", NON_EXISTENT_POST_ID))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeDoesNotExist("post"))
@@ -219,7 +229,7 @@ public class TestPostController {
     }
 
     @Test
-    public void showPost_ShouldAddTodoEntryToModelAndRenderViewTodoEntryView() throws Exception {
+    public void showPost_PostEntryFound_ShouldAddPostEntryToModelAndRenderViewPostEntryView() throws Exception {
         mockMvc.perform(get("/post/{postId}", FIRST_PUBLISHED_POST_ID))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("post"))
@@ -355,46 +365,42 @@ public class TestPostController {
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("title", "sampleTitle")
                 .param("text", "sampleText")
-                .sessionAttr("post", postService.read(FIRST_PUBLISHED_POST_ID))
         )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(HOME_PAGE))
                 .andExpect(view().name(REDIRECT_TO + HOME_PAGE));
-//
-//        ArgumentCaptor<Post> formObjectArgument = ArgumentCaptor.forClass(Post.class);
-//        verify(postService, times(1)).updatePost(formObjectArgument.capture());
-//        verifyNoMoreInteractions(postService);
-//
-//        Post formPost = formObjectArgument.getValue();
-//
-//        assertThat(formPost.getId(), is(0L));
-//        assertThat(formPost.getAuthor(), nullValue());
-//        assertThat(formPost.getTitle(), is("sampleTitle"));
-//        assertThat(formPost.getText(), is("sampleText"));
-//        assertThat(formPost.getCreatedDate(), nullValue());
-//        assertThat(formPost.getPublishedDate(), nullValue());
-//
-//
-//        mockMvc.perform(post("/post/{postId}/edit", 1L)
-//                .param("title", "newTitle1")
-//                .param("text", "newText1")
-//        )
-//                .andExpect(status().is3xxRedirection())
-//                .andExpect(view().name(REDIRECT_TO_HOME_PAGE));
+
+        ArgumentCaptor<Post> formObjectArgument = ArgumentCaptor.forClass(Post.class);
+        verify(postService, times(1)).updatePost(formObjectArgument.capture());
+        verifyNoMoreInteractions(postService);
+
+        Post formPost = formObjectArgument.getValue();
+
+        assertThat(formPost.getId(), is(0L));
+        assertThat(formPost.getAuthor(), nullValue());
+        assertThat(formPost.getTitle(), is("sampleTitle"));
+        assertThat(formPost.getText(), is("sampleText"));
+        assertThat(formPost.getCreatedDate(), nullValue());
+        assertThat(formPost.getPublishedDate(), nullValue());
     }
 
     @Test
     public void testPublishPost() throws Exception {
-        System.out.println("-dupa " + firstDraftPost + " " + firstDraftPost.getPublishedDate());
-        verify(postService, times(0)).read(DRAFT_POST_ID);
-
         mockMvc.perform(get("/post/{postId}/publish", DRAFT_POST_ID))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("post"))
-                .andExpect(model().attribute("post", firstDraftPost))
+                .andExpect(model().attribute("post", hasProperty("id", is(DRAFT_POST_ID))))
+                .andExpect(model().attribute("post", hasProperty("author", is(firstUser))))
+                .andExpect(model().attribute("post", hasProperty("title", is("title3"))))
+                .andExpect(model().attribute("post", hasProperty("text", is("text3"))))
+                .andExpect(model().attribute("post", hasProperty("createdDate", is(CREATED_DATE))))
+                .andExpect(model().attribute("post", hasProperty("publishedDate", is(PUBLISHED_DATE))))
+                .andExpect(forwardedUrl(VIEWS_POST_DETAIL))
                 .andExpect(view().name(VIEWS_POST_DETAIL));
-        System.out.println("-dupa " + firstDraftPost + " " + firstDraftPost.getPublishedDate());
+
         verify(postService, times(1)).read(DRAFT_POST_ID);
+        verify(postService, times(1)).publishPost(draftPost);
+        verifyNoMoreInteractions(postService);
     }
 
     @Test
@@ -402,6 +408,9 @@ public class TestPostController {
         mockMvc.perform(get("/post/{postId}/remove", FIRST_PUBLISHED_POST_ID))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name(REDIRECT_TO + HOME_PAGE));
+
+        verify(postService, times(1)).removePost(FIRST_PUBLISHED_POST_ID);
+        verifyNoMoreInteractions(postService);
     }
 
     @Test
@@ -452,8 +461,8 @@ public class TestPostController {
                 .sessionAttr("comment", new Comment())
         )
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(POST_DETAIL_PAGE + "/" + FIRST_PUBLISHED_POST_ID))
-                .andExpect(view().name(REDIRECT_TO + POST_DETAIL_PAGE + "/" + FIRST_PUBLISHED_POST_ID));
+                .andExpect(redirectedUrl(POST_PAGE + "/" + FIRST_PUBLISHED_POST_ID))
+                .andExpect(view().name(REDIRECT_TO + POST_PAGE + "/" + FIRST_PUBLISHED_POST_ID));
 
         ArgumentCaptor<Comment> formObjectArgument = ArgumentCaptor.forClass(Comment.class);
         verify(postService, times(1)).addCommentToPost(formObjectArgument.capture(), eq(FIRST_PUBLISHED_POST_ID));
