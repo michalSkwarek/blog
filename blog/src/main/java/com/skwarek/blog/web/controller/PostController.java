@@ -2,15 +2,19 @@ package com.skwarek.blog.web.controller;
 
 import com.skwarek.blog.data.entity.Comment;
 import com.skwarek.blog.data.entity.Post;
+import com.skwarek.blog.data.entity.User;
 import com.skwarek.blog.service.PostService;
 import javafx.geometry.Pos;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.context.support.HttpRequestHandlerServlet;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -96,7 +100,7 @@ public class PostController {
             return VIEWS_POST_FORM;
         }
 
-        postService.update(post);
+        postService.updatePost(post);
         return "redirect:/";
     }
 

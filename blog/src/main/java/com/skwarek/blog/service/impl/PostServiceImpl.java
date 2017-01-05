@@ -2,16 +2,16 @@ package com.skwarek.blog.service.impl;
 
 import com.skwarek.blog.data.dao.CommentDao;
 import com.skwarek.blog.data.dao.PostDao;
+import com.skwarek.blog.data.dao.UserDao;
 import com.skwarek.blog.data.entity.Comment;
 import com.skwarek.blog.data.entity.Post;
 import com.skwarek.blog.service.PostService;
 import com.skwarek.blog.service.generic.GenericServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.List;
 
@@ -26,6 +26,9 @@ public class PostServiceImpl extends GenericServiceImpl<Post, Long> implements P
 
     @Autowired
     private CommentDao commentDao;
+
+    @Autowired
+    private UserDao userDao;
 
     @Override
     @SuppressWarnings("unchecked")
@@ -52,8 +55,18 @@ public class PostServiceImpl extends GenericServiceImpl<Post, Long> implements P
 
     @Override
     public void createPost(Post post) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        post.setAuthor(userDao.findUserByUsername(auth.getName()));
         post.setCreatedDate(new Date());
         postDao.create(post);
+    }
+
+    @Override
+    public void updatePost(Post post) {
+        Post oldPost = postDao.read(post.getId());
+        oldPost.setTitle(post.getTitle());
+        oldPost.setText(post.getText());
+        update(oldPost);
     }
 
     @Override
