@@ -30,6 +30,7 @@ public class PostController {
     private final static String VIEWS_POST_DETAIL = "blog/post_detail";
     private final static String VIEWS_POST_FORM = "blog/post_edit";
     private final static String VIEWS_COMMENT_FORM = "blog/add_comment_to_post";
+    private final static String REDIRECT_TO_HOME_PAGE = "redirect:/";
     private final PostService postService;
 
     @Autowired
@@ -82,7 +83,7 @@ public class PostController {
         }
 
         postService.createPost(post);
-        return "redirect:/";
+        return REDIRECT_TO_HOME_PAGE;
     }
 
     @RequestMapping(value = "/post/{postId}/edit", method = RequestMethod.GET)
@@ -101,7 +102,7 @@ public class PostController {
         }
 
         postService.updatePost(post);
-        return "redirect:/";
+        return REDIRECT_TO_HOME_PAGE;
     }
 
     @RequestMapping(value = "post/{postId}/publish", method = RequestMethod.GET)
@@ -117,7 +118,7 @@ public class PostController {
     public String removePost(@PathVariable long postId) {
 
         postService.removePost(postId);
-        return "redirect:/";
+        return REDIRECT_TO_HOME_PAGE;
     }
 
     @RequestMapping(value = "/post/{postId}/comment", method = RequestMethod.GET)
@@ -135,6 +136,6 @@ public class PostController {
         }
 
         postService.addCommentToPost(comment, postId);
-        return "redirect:/post/" + postId;
+        return REDIRECT_TO_HOME_PAGE + "post/" + postId;
     }
 }
