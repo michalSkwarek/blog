@@ -1,10 +1,11 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
 
 <div class="post">
     <c:if test="${post.publishedDate != null}">
         <div class="date">
-                ${post.publishedDate}
+            <fmt:formatDate pattern="yyyy-MM-dd hh:mm:ss" value="${post.publishedDate}"/>
         </div>
     </c:if>
     <c:if test="${post.publishedDate == null}">
@@ -33,7 +34,7 @@
     <c:forEach items="${comments}" var="comment">
         <div class="comment">
             <div class="date">
-                    ${comment.createdDate}
+                <fmt:formatDate pattern="yyyy-MM-dd hh:mm:ss" value="${comment.createdDate}"/>
                 <c:if test="${comment.approvedComment == false}">
                     <a class="btn btn-default" href="/comment/${comment.id}/remove"><span
                             class="glyphicon glyphicon-remove"></span></a>
@@ -52,7 +53,7 @@
         <c:if test="${comment.approvedComment == true}">
             <div class="comment">
                 <div class="date">
-                        ${comment.createdDate}
+                    <fmt:formatDate pattern="yyyy-MM-dd hh:mm:ss" value="${comment.createdDate}"/>
                 </div>
                 <strong>${comment.author}</strong>
                 <p>${comment.text}</p>
