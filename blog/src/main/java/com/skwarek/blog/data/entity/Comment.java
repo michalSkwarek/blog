@@ -16,10 +16,10 @@ public class Comment extends BaseEntity implements Serializable {
 
     private static final long serialVersionUID = -7098117967486832113L;
 
-    @NotEmpty
+    @NotEmpty(message = "{notEmpty}")
     private String author;
 
-    @NotEmpty
+    @NotEmpty(message = "{notEmpty}")
     @Type(type = "text")
     private String text;
 

@@ -15,7 +15,6 @@ import static junit.framework.TestCase.assertEquals;
 /**
  * Created by Michal on 05/01/2017.
  */
-@RunWith(MockitoJUnitRunner.class)
 public class TestComment {
 
     private final static long PUBLISHED_POST_ID = 1;

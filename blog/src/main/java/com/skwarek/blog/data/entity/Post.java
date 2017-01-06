@@ -22,10 +22,10 @@ public class Post extends BaseEntity implements Serializable {
     @JoinColumn(name = "author_id")
     private User author;
 
-    @NotEmpty
+    @NotEmpty(message = "{notEmpty}")
     private String title;
 
-    @NotEmpty
+    @NotEmpty(message = "{notEmpty}")
     @Type(type = "text")
     private String text;
 

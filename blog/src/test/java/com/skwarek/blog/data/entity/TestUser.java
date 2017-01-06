@@ -11,7 +11,6 @@ import static junit.framework.TestCase.assertEquals;
 /**
  * Created by Michal on 05/01/2017.
  */
-@RunWith(MockitoJUnitRunner.class)
 public class TestUser {
 
     private final static long USER_ID = 1;
