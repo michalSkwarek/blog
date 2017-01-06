@@ -64,8 +64,8 @@ public class TestPostController {
     private List<Post> listOfPublishedPosts;
     private List<Post> listOfDraftPosts;
 
-    private Comment firstApprovedComment;
-    private Comment firstNotApprovedComment;
+    private Comment approvedComment;
+    private Comment notApprovedComment;
 
     private PostService postService;
     private PostController postController;
@@ -110,21 +110,23 @@ public class TestPostController {
         this.listOfDraftPosts = new ArrayList<>();
         this.listOfDraftPosts.add(draftPost);
 
-        this.firstApprovedComment = new Comment();
-        this.firstApprovedComment.setId(APPROVED_COMMENT_ID);
-        this.firstApprovedComment.setAuthor("author1");
-        this.firstApprovedComment.setText("commentText1");
-        this.firstApprovedComment.setCreatedDate(CREATED_DATE);
-        this.firstApprovedComment.setApprovedComment(true);
-        this.firstApprovedComment.setPost(firstPublishedPost);
+        this.approvedComment = new Comment();
+        this.approvedComment.setId(APPROVED_COMMENT_ID);
+        this.approvedComment.setAuthor("author1");
+        this.approvedComment.setText("commentText1");
+        this.approvedComment.setCreatedDate(CREATED_DATE);
+        this.approvedComment.setApprovedComment(true);
+        this.approvedComment.setPost(firstPublishedPost);
 
-        this.firstNotApprovedComment = new Comment();
-        this.firstNotApprovedComment.setId(NOT_APPROVED_COMMENT_ID);
-        this.firstNotApprovedComment.setAuthor("author2");
-        this.firstNotApprovedComment.setText("commentText2");
-        this.firstNotApprovedComment.setCreatedDate(CREATED_DATE);
-        this.firstNotApprovedComment.setApprovedComment(false);
-        this.firstNotApprovedComment.setPost(firstPublishedPost);
+        this.notApprovedComment = new Comment();
+        this.notApprovedComment.setId(NOT_APPROVED_COMMENT_ID);
+        this.notApprovedComment.setAuthor("author2");
+        this.notApprovedComment.setText("commentText2");
+        this.notApprovedComment.setCreatedDate(CREATED_DATE);
+        this.notApprovedComment.setApprovedComment(false);
+        this.notApprovedComment.setPost(firstPublishedPost);
+
+        this.firstPublishedPost.setComments(Arrays.asList(approvedComment, notApprovedComment));
 
         this.postService = mock(PostService.class);
         this.postController = new PostController(this.postService);
@@ -145,8 +147,6 @@ public class TestPostController {
                 return null;
             }
         }).when(postService).publishPost(draftPost);
-
-        given(this.postService.read(NON_EXISTENT_POST_ID)).willReturn(null);
     }
 
     @Test
@@ -225,11 +225,11 @@ public class TestPostController {
                 .andExpect(view().name(VIEWS_POST_DETAIL));
 
         verify(postService, times(1)).read(NON_EXISTENT_POST_ID);
-//        verifyZeroInteractions(postService);
+        verifyNoMoreInteractions(postService);
     }
 
     @Test
-    public void showPost_PostEntryFound_ShouldAddPostEntryToModelAndRenderViewPostEntryView() throws Exception {
+    public void showPost_PostEntryFound_ShouldAddPostEntryToModelAndRenderPostEntryView() throws Exception {
         mockMvc.perform(get("/post/{postId}", FIRST_PUBLISHED_POST_ID))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("post"))
@@ -244,17 +244,39 @@ public class TestPostController {
                 .andExpect(view().name(VIEWS_POST_DETAIL));
 
         verify(postService, times(1)).read(FIRST_PUBLISHED_POST_ID);
-//        verifyZeroInteractions(postService);
+        verifyNoMoreInteractions(postService);
     }
 
     @Test
-    public void testSendingCommentsPostToView() throws Exception {
-
-        // TODO: 05/01/2017
+    public void showPost_PostAndCommentsEntryFound_ShouldAddCommentsEntryToModelAndRenderCommentsEntryView() throws Exception {
+        mockMvc.perform(get("/post/{postId}", FIRST_PUBLISHED_POST_ID))
+                .andExpect(model().attributeExists("comments"))
+                .andExpect(model().attribute("comments", Arrays.asList(approvedComment, notApprovedComment)))
+                .andExpect(model().attribute("comments", hasSize(2)))
+                .andExpect(model().attribute("comments", hasItem(
+                        allOf(
+                                hasProperty("id", is(APPROVED_COMMENT_ID)),
+                                hasProperty("author", is("author1")),
+                                hasProperty("text", is("commentText1")),
+                                hasProperty("createdDate", is(CREATED_DATE)),
+                                hasProperty("approvedComment", is(true)),
+                                hasProperty("post", is(firstPublishedPost))
+                        )
+                )))
+                .andExpect(model().attribute("comments", hasItem(
+                        allOf(
+                                hasProperty("id", is(NOT_APPROVED_COMMENT_ID)),
+                                hasProperty("author", is("author2")),
+                                hasProperty("text", is("commentText2")),
+                                hasProperty("createdDate", is(CREATED_DATE)),
+                                hasProperty("approvedComment", is(false)),
+                                hasProperty("post", is(firstPublishedPost))
+                        )
+                )));
     }
 
     @Test
-    public void testInitCreatePostForm() throws Exception {
+    public void initCreatePostForm_ShouldAddPostToModelAndRenderEmptyPostFormView() throws Exception {
         mockMvc.perform(get("/post/new"))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("post"))
@@ -271,12 +293,13 @@ public class TestPostController {
     }
 
     @Test
-    public void testProcessCreatePostFormHasErrors() throws Exception {
+    public void processCreatePostForm_TitleAndTextAreEmpty_ShouldHasErrors() throws Exception {
         mockMvc.perform(post("/post/new")
                 .param("title", "")
                 .param("text", "")
         )
                 .andExpect(status().isOk())
+                .andExpect(model().attributeExists("post"))
                 .andExpect(model().attributeHasErrors("post"))
                 .andExpect(model().attributeHasFieldErrors("post", "title"))
                 .andExpect(model().attributeHasFieldErrors("post", "text"))
@@ -293,7 +316,7 @@ public class TestPostController {
     }
 
     @Test
-    public void testProcessCreatePostFormSuccess() throws Exception {
+    public void processCreatePostForm_ShouldBeFine() throws Exception {
         mockMvc.perform(post("/post/new")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("title", "sampleTitle")
@@ -319,7 +342,7 @@ public class TestPostController {
     }
 
     @Test
-    public void testInitEditPostForm() throws Exception {
+    public void initEditPostForm_ShouldAddPostToModelAndRenderPostFormView() throws Exception {
         mockMvc.perform(get("/post/{postId}/edit", FIRST_PUBLISHED_POST_ID))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("post"))
@@ -338,12 +361,13 @@ public class TestPostController {
     }
 
     @Test
-    public void testProcessEditPostFormHasErrors() throws Exception {
+    public void processEditPostForm_TitleAndTextAreEmpty_ShouldHasErrors() throws Exception {
         mockMvc.perform(post("/post/{postId}/edit", FIRST_PUBLISHED_POST_ID)
                 .param("title", "")
                 .param("text", "")
         )
                 .andExpect(status().isOk())
+                .andExpect(model().attributeExists("post"))
                 .andExpect(model().attributeHasErrors("post"))
                 .andExpect(model().attributeHasFieldErrors("post", "title"))
                 .andExpect(model().attributeHasFieldErrors("post", "text"))
@@ -360,11 +384,12 @@ public class TestPostController {
     }
 
     @Test
-    public void testProcessEditPostFormSuccess() throws Exception {
+    public void processEditPostForm_ShouldBeFine() throws Exception {
         mockMvc.perform(post("/post/{postId}/edit", FIRST_PUBLISHED_POST_ID)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("title", "sampleTitle")
                 .param("text", "sampleText")
+                .sessionAttr("post", new Post())
         )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(HOME_PAGE))
@@ -376,7 +401,7 @@ public class TestPostController {
 
         Post formPost = formObjectArgument.getValue();
 
-        assertThat(formPost.getId(), is(0L));
+        assertThat(formPost.getId(), is(NON_EXISTENT_HIBERNATE_ID));
         assertThat(formPost.getAuthor(), nullValue());
         assertThat(formPost.getTitle(), is("sampleTitle"));
         assertThat(formPost.getText(), is("sampleText"));
@@ -385,7 +410,7 @@ public class TestPostController {
     }
 
     @Test
-    public void testPublishPost() throws Exception {
+    public void publishPost_ShouldAddPublishedDateToPost() throws Exception {
         mockMvc.perform(get("/post/{postId}/publish", DRAFT_POST_ID))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("post"))
@@ -404,9 +429,10 @@ public class TestPostController {
     }
 
     @Test
-    public void testRemovePost() throws Exception {
+    public void removePost_ShouldRemovePost() throws Exception {
         mockMvc.perform(get("/post/{postId}/remove", FIRST_PUBLISHED_POST_ID))
                 .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(HOME_PAGE))
                 .andExpect(view().name(REDIRECT_TO + HOME_PAGE));
 
         verify(postService, times(1)).removePost(FIRST_PUBLISHED_POST_ID);
@@ -414,7 +440,7 @@ public class TestPostController {
     }
 
     @Test
-    public void testInitCreateCommentForm() throws Exception {
+    public void initCreateCommentForm_ShouldAddCommentToModelAndRenderEmptyCommentFormView() throws Exception {
         mockMvc.perform(get("/post/{postId}/comment", FIRST_PUBLISHED_POST_ID))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("comment"))
@@ -431,12 +457,13 @@ public class TestPostController {
     }
 
     @Test
-    public void testProcessCreateCommentFormHasErrors() throws Exception {
+    public void processCreateCommentForm_AuthorAndTextAreEmpty_ShouldHasErrors() throws Exception {
         mockMvc.perform(post("/post/{postId}/comment", FIRST_PUBLISHED_POST_ID)
                 .param("author", "")
                 .param("text", "")
         )
                 .andExpect(status().isOk())
+                .andExpect(model().attributeExists("comment"))
                 .andExpect(model().attributeHasErrors("comment"))
                 .andExpect(model().attributeHasFieldErrors("comment", "author"))
                 .andExpect(model().attributeHasFieldErrors("comment", "text"))
@@ -453,7 +480,7 @@ public class TestPostController {
     }
 
     @Test
-    public void testProcessCreateCommentFormSuccess() throws Exception {
+    public void processCreateCommentForm_ShouldBeFine() throws Exception {
         mockMvc.perform(post("/post/{postId}/comment", FIRST_PUBLISHED_POST_ID)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("author", "sampleAuthor")

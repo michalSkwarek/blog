@@ -62,8 +62,9 @@ public class PostController {
         Post post = postService.read(postId);
         model.addAttribute("post", post);
 
-        List<Comment> comments = postService.findAllComments(post);
-        model.addAttribute("comments", comments);
+        if (post != null) {
+            model.addAttribute("comments", post.getComments());
+        }
         return VIEWS_POST_DETAIL;
     }
 

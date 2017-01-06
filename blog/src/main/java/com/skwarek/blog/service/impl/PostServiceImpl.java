@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -19,6 +21,7 @@ import java.util.List;
  * Created by Michal on 02/01/2017.
  */
 @Service
+@Transactional(propagation = Propagation.REQUIRED)
 public class PostServiceImpl extends GenericServiceImpl<Post, Long> implements PostService {
 
     @Autowired
@@ -32,25 +35,27 @@ public class PostServiceImpl extends GenericServiceImpl<Post, Long> implements P
 
     @Override
     @SuppressWarnings("unchecked")
+    @Transactional(readOnly = true)
     public List<Post> findAllPublishedPosts() {
         return postDao.findAllPublishedPosts();
     }
 
     @Override
     @SuppressWarnings("unchecked")
+    @Transactional(readOnly = true)
     public List<Post> findAllDrafts() {
         return postDao.findAllDrafts();
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public List<Comment> findAllComments(Post post) {
-        return postDao.findAllComments(post);
-    }
-
-    @Override
     public int getApprovedCommentsCounter(Post post) {
-        return postDao.getApprovedCommentsCounter(post);
+        int approvedComments = 0;
+        for (Comment comment : post.getComments()) {
+            if (comment.getPost().equals(post) && comment.isApprovedComment()) {
+                ++approvedComments;
+            }
+        }
+        return approvedComments;
     }
 
     @Override

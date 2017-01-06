@@ -35,7 +35,7 @@ public class Post extends BaseEntity implements Serializable {
     @Column(name = "published_date")
     private Date publishedDate;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY, mappedBy = "post")
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER, mappedBy = "post")
     private List<Comment> comments = new ArrayList<>();
 
     @Transient

@@ -27,20 +27,6 @@ public class PostDaoImpl extends GenericDaoImpl<Post, Long> implements PostDao {
     }
 
     @Override
-    public List findAllComments(Post post) {
-        Query listOfComments = getSession().createQuery("from Comment c where c.post = :post");
-        listOfComments.setParameter("post", post);
-        return listOfComments.list();
-    }
-
-    @Override
-    public int getApprovedCommentsCounter(Post post) {
-        Query approvedComments = getSession().createQuery("from Comment c where c.post = :post and c.approvedComment = true");
-        approvedComments.setParameter("post", post);
-        return approvedComments.list().size();
-    }
-
-    @Override
     public boolean removePost(long postId) {
         removeCommentsFromPost(postId);
 

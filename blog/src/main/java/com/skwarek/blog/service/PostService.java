@@ -15,8 +15,6 @@ public interface PostService extends GenericService<Post, Long> {
 
     List<Post> findAllDrafts();
 
-    List<Comment> findAllComments(Post post);
-
     int getApprovedCommentsCounter(Post post);
 
     void createPost(Post post);
