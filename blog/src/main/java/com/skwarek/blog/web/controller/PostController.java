@@ -41,9 +41,6 @@ public class PostController {
     public String showPublishedPosts(Model model) {
 
         List<Post> posts = postService.findAllPublishedPosts();
-        for (Post post : posts) {
-            post.setApprovedCommentsCounter(postService.getApprovedCommentsCounter(post));
-        }
         model.addAttribute("posts", posts);
         return VIEWS_POST_LIST;
     }

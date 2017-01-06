@@ -14,22 +14,24 @@ import static junit.framework.TestCase.assertEquals;
 @RunWith(MockitoJUnitRunner.class)
 public class TestUser {
 
-    private User firstUser;
+    private final static long USER_ID = 1;
+
+    private User user;
 
     @Before
     public void setUp() {
-        this.firstUser = new User();
-        this.firstUser.setId(1L);
-        this.firstUser.setUsername("user1");
-        this.firstUser.setPassword("pass1");
-        this.firstUser.setEnabled(true);
-        this.firstUser.setRole("ROLE_ADMIN");
+        this.user = new User();
+        this.user.setId(USER_ID);
+        this.user.setUsername("user1");
+        this.user.setPassword("pass1");
+        this.user.setEnabled(true);
+        this.user.setRole("ROLE_ADMIN");
     }
 
     @Test
     public void beanIsSerializable() {
-        final byte[] serializedUser = SerializationUtils.serialize(firstUser);
+        final byte[] serializedUser = SerializationUtils.serialize(user);
         final User deserializedUser = (User) SerializationUtils.deserialize(serializedUser);
-        assertEquals(firstUser, deserializedUser);
+        assertEquals(user, deserializedUser);
     }
 }

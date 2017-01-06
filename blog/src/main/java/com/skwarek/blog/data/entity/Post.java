@@ -38,10 +38,17 @@ public class Post extends BaseEntity implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER, mappedBy = "post")
     private List<Comment> comments = new ArrayList<>();
 
-    @Transient
-    private int approvedCommentsCounter;
-
     public Post() { }
+
+    public int approvedCommentCounter() {
+        int counter = 0;
+        for (Comment comment : comments) {
+            if (comment.isApprovedComment()) {
+                ++counter;
+            }
+        }
+        return counter;
+    }
 
     public User getAuthor() {
         return author;
@@ -89,14 +96,6 @@ public class Post extends BaseEntity implements Serializable {
 
     public void setComments(List<Comment> comments) {
         this.comments = comments;
-    }
-
-    public int getApprovedCommentsCounter() {
-        return approvedCommentsCounter;
-    }
-
-    public void setApprovedCommentsCounter(int approvedCommentsCounter) {
-        this.approvedCommentsCounter = approvedCommentsCounter;
     }
 
     @Override

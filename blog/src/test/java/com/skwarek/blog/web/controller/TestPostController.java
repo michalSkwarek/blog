@@ -180,7 +180,7 @@ public class TestPostController {
                 .andExpect(view().name(VIEWS_POST_LIST));
 
         verify(postService, times(1)).findAllPublishedPosts();
-//        verifyNoMoreInteractions(postService);
+        verifyNoMoreInteractions(postService);
     }
 
     @Test

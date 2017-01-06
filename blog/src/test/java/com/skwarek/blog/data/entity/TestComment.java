@@ -18,39 +18,45 @@ import static junit.framework.TestCase.assertEquals;
 @RunWith(MockitoJUnitRunner.class)
 public class TestComment {
 
-    private final static Date createdDate = new GregorianCalendar(2000, Calendar.JANUARY, 11, 11, 22, 33).getTime();
-    private final static Date publishedDate = new GregorianCalendar(2000, Calendar.JANUARY, 12, 22, 33, 44).getTime();
+    private final static long PUBLISHED_POST_ID = 1;
 
-    private User firstUser;
-    private Post firstPublishedPost;
-    private Comment firstApprovedComment;
+    private final static long APPROVED_COMMENT_ID = 1;
+
+    private final static Date CREATED_DATE = new GregorianCalendar(2000, Calendar.JANUARY, 11, 11, 22, 33).getTime();
+    private final static Date PUBLISHED_DATE = new GregorianCalendar(2000, Calendar.JANUARY, 12, 22, 33, 44).getTime();
+
+    private User user;
+
+    private Post publishedPost;
+
+    private Comment approvedComment;
 
     @Before
     public void setUp() {
-        this.firstUser = new User();
-        this.firstUser.setUsername("user1");
+        this.user = new User();
+        this.user.setUsername("user1");
 
-        this.firstPublishedPost = new Post();
-        this.firstPublishedPost.setId(1L);
-        this.firstPublishedPost.setAuthor(firstUser);
-        this.firstPublishedPost.setTitle("title1");
-        this.firstPublishedPost.setText("text1");
-        this.firstPublishedPost.setCreatedDate(createdDate);
-        this.firstPublishedPost.setPublishedDate(publishedDate);
+        this.publishedPost = new Post();
+        this.publishedPost.setId(PUBLISHED_POST_ID);
+        this.publishedPost.setAuthor(user);
+        this.publishedPost.setTitle("title1");
+        this.publishedPost.setText("text1");
+        this.publishedPost.setCreatedDate(CREATED_DATE);
+        this.publishedPost.setPublishedDate(PUBLISHED_DATE);
 
-        this.firstApprovedComment = new Comment();
-        this.firstApprovedComment.setId(1L);
-        this.firstApprovedComment.setAuthor("author1");
-        this.firstApprovedComment.setText("commentText1");
-        this.firstApprovedComment.setCreatedDate(createdDate);
-        this.firstApprovedComment.setApprovedComment(true);
-        this.firstApprovedComment.setPost(firstPublishedPost);
+        this.approvedComment = new Comment();
+        this.approvedComment.setId(APPROVED_COMMENT_ID);
+        this.approvedComment.setAuthor("author1");
+        this.approvedComment.setText("commentText1");
+        this.approvedComment.setCreatedDate(CREATED_DATE);
+        this.approvedComment.setApprovedComment(true);
+        this.approvedComment.setPost(publishedPost);
     }
 
     @Test
     public void beanIsSerializable() {
-        final byte[] serializedComment = SerializationUtils.serialize(firstApprovedComment);
+        final byte[] serializedComment = SerializationUtils.serialize(approvedComment);
         final Comment deserializedComment = (Comment) SerializationUtils.deserialize(serializedComment);
-        assertEquals(firstApprovedComment, deserializedComment);
+        assertEquals(approvedComment, deserializedComment);
     }
 }

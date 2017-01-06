@@ -1,5 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <c:forEach items="${posts}" var="post">
     <div class="post">
@@ -8,6 +9,6 @@
         </div>
         <h1><a href="/post/${post.id}">${post.title}</a></h1>
         <p>${post.text}</p>
-        <a href="/post/${post.id}">Comments: ${post.approvedCommentsCounter}</a>
+        <a href="/post/${post.id}">Comments: ${post.approvedCommentCounter()}</a>
     </div>
 </c:forEach>

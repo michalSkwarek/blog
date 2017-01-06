@@ -48,17 +48,6 @@ public class PostServiceImpl extends GenericServiceImpl<Post, Long> implements P
     }
 
     @Override
-    public int getApprovedCommentsCounter(Post post) {
-        int approvedComments = 0;
-        for (Comment comment : post.getComments()) {
-            if (comment.getPost().equals(post) && comment.isApprovedComment()) {
-                ++approvedComments;
-            }
-        }
-        return approvedComments;
-    }
-
-    @Override
     public void createPost(Post post) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         post.setAuthor(userDao.findUserByUsername(auth.getName()));
