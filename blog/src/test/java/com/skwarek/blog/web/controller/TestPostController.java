@@ -41,6 +41,9 @@ public class TestPostController {
     private final static String HOME_PAGE = "/";
     private final static String POST_PAGE = "/post";
 
+    private final static long FIRST_USER_ID = 1;
+    private final static long SECOND_USER_ID = 2;
+
     private final static long NON_EXISTENT_HIBERNATE_ID = 0;
 
     private final static long FIRST_PUBLISHED_POST_ID = 1;
@@ -75,10 +78,10 @@ public class TestPostController {
     @Before
     public void setUp() {
         this.firstUser = new User();
-        this.firstUser.setUsername("user1");
+        this.firstUser.setId(FIRST_USER_ID);
 
         this.secondUser = new User();
-        this.secondUser.setUsername("user2");
+        this.secondUser.setId(SECOND_USER_ID);
 
         this.firstPublishedPost = new Post();
         this.firstPublishedPost.setId(FIRST_PUBLISHED_POST_ID);

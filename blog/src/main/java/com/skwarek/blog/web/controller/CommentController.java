@@ -15,6 +15,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @RequestMapping(value = "/comment")
 public class CommentController {
 
+    private final static String REDIRECT_TO = "redirect:";
+    private final static String POST_PAGE = "/post";
+
     private final CommentService commentService;
 
     @Autowired
@@ -27,7 +30,7 @@ public class CommentController {
 
         Comment comment = commentService.read(commentId);
         commentService.approve(comment);
-        return "redirect:/post/" + comment.getPost().getId();
+        return REDIRECT_TO + POST_PAGE + "/" + comment.getPost().getId();
     }
 
     @RequestMapping(value = "/{commentId}/remove", method = RequestMethod.GET)
@@ -35,6 +38,6 @@ public class CommentController {
 
         Comment comment = commentService.read(commentId);
         commentService.removeComment(commentId);
-        return "redirect:/post/" + comment.getPost().getId();
+        return REDIRECT_TO + POST_PAGE + "/" + comment.getPost().getId();
     }
 }
