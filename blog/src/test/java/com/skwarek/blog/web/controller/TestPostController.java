@@ -149,7 +149,7 @@ public class TestPostController {
                 draftPost.setPublishedDate(PUBLISHED_DATE);
                 return null;
             }
-        }).when(postService).publishPost(draftPost);
+        }).when(this.postService).publishPost(draftPost);
     }
 
     @Test

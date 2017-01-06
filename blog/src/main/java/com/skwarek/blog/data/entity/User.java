@@ -71,10 +71,21 @@ public class User extends BaseEntity implements Serializable {
         return username != null ? username.hashCode() : 0;
     }
 
+//    @Override
+//    public String toString() {
+//        return "User{" +
+//                "username=" + username +
+//                '}';
+//    }
+
+
     @Override
     public String toString() {
-        return "User{" +
-                "username=" + username +
+        return "User{" + getId() +
+                "username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", enabled=" + enabled +
+                ", role='" + role + '\'' +
                 '}';
     }
 }

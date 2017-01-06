@@ -24,14 +24,16 @@ import java.util.List;
 @Transactional(propagation = Propagation.REQUIRED)
 public class PostServiceImpl extends GenericServiceImpl<Post, Long> implements PostService {
 
-    @Autowired
-    private PostDao postDao;
+    private final PostDao postDao;
+    private final CommentDao commentDao;
+    private final UserDao userDao;
 
     @Autowired
-    private CommentDao commentDao;
-
-    @Autowired
-    private UserDao userDao;
+    public PostServiceImpl(PostDao postDao, CommentDao commentDao, UserDao userDao) {
+        this.postDao = postDao;
+        this.commentDao = commentDao;
+        this.userDao = userDao;
+    }
 
     @Override
     @SuppressWarnings("unchecked")
@@ -60,7 +62,7 @@ public class PostServiceImpl extends GenericServiceImpl<Post, Long> implements P
         Post oldPost = postDao.read(post.getId());
         oldPost.setTitle(post.getTitle());
         oldPost.setText(post.getText());
-        update(oldPost);
+        postDao.update(oldPost);
     }
 
     @Override

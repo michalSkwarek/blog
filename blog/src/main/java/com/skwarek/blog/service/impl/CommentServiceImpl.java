@@ -16,8 +16,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(propagation = Propagation.REQUIRED)
 public class CommentServiceImpl extends GenericServiceImpl<Comment, Long> implements CommentService {
 
+    private final CommentDao commentDao;
+
     @Autowired
-    private CommentDao commentDao;
+    public CommentServiceImpl(CommentDao commentDao) {
+        this.commentDao = commentDao;
+    }
 
     @Override
     public void approve(Comment comment) {

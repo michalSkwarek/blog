@@ -100,8 +100,20 @@ public class Comment extends BaseEntity implements Serializable {
         return result;
     }
 
+//    @Override
+//    public String toString() {
+//        return text;
+//    }
+
+
     @Override
     public String toString() {
-        return text;
+        return "Comment{" + getId() +
+                "author='" + author + '\'' +
+                ", text='" + text + '\'' +
+                ", createdDate=" + createdDate +
+                ", approvedComment=" + approvedComment +
+                ", post=" + post +
+                '}';
     }
 }
