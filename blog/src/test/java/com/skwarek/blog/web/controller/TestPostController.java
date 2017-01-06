@@ -184,14 +184,6 @@ public class TestPostController {
     }
 
     @Test
-    public void testSendingApprovedCommentsCounterInPostToView() throws Exception {
-        mockMvc.perform(get("/"));
-
-
-        // TODO: 05/01/2017
-    }
-
-    @Test
     public void showDrafts_ShouldAddDraftEntriesToModelAndRenderDraftListView() throws Exception {
         mockMvc.perform(get("/drafts"))
                 .andExpect(status().isOk())
