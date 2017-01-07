@@ -1,5 +1,6 @@
 package com.skwarek.blog.data.entity;
 
+import com.skwarek.blog.MyEmbeddedDatabase;
 import javafx.geometry.Pos;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,31 +21,15 @@ import static junit.framework.TestCase.assertEquals;
  */
 public class TestPostValidation {
 
-    private final static long USER_ID = 1;
-
-    private final static long PUBLISHED_POST_ID = 1;
-
-    private final static Date CREATED_DATE = new GregorianCalendar(2000, Calendar.JANUARY, 11, 11, 22, 33).getTime();
-    private final static Date PUBLISHED_DATE = new GregorianCalendar(2000, Calendar.JANUARY, 12, 22, 33, 44).getTime();
-
-    private User user;
-
     private Post publishedPost;
 
     private Validator validator;
 
     @Before
     public void setUp() {
-        this.user = new User();
-        this.user.setId(USER_ID);
+        MyEmbeddedDatabase myDB = new MyEmbeddedDatabase();
 
-        this.publishedPost = new Post();
-        this.publishedPost.setId(PUBLISHED_POST_ID);
-        this.publishedPost.setAuthor(user);
-        this.publishedPost.setTitle("title1");
-        this.publishedPost.setText("text1");
-        this.publishedPost.setCreatedDate(CREATED_DATE);
-        this.publishedPost.setPublishedDate(PUBLISHED_DATE);
+        this.publishedPost = myDB.getPost_no_1();
 
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         validator = factory.getValidator();

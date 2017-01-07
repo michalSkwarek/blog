@@ -1,5 +1,6 @@
 package com.skwarek.blog.data.entity;
 
+import com.skwarek.blog.MyEmbeddedDatabase;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -19,30 +20,15 @@ import static junit.framework.TestCase.assertEquals;
  */
 public class TestCommentValidation {
 
-    private final static long PUBLISHED_POST_ID = 1;
-
-    private final static long APPROVED_COMMENT_ID = 1;
-
-    private final static Date CREATED_DATE = new GregorianCalendar(2000, Calendar.JANUARY, 11, 11, 22, 33).getTime();
-
-    private Post publishedPost;
-
     private Comment approvedComment;
 
     private Validator validator;
 
     @Before
     public void setUp() {
-        this.publishedPost = new Post();
-        this.publishedPost.setId(PUBLISHED_POST_ID);
+        MyEmbeddedDatabase myDB = new MyEmbeddedDatabase();
 
-        this.approvedComment = new Comment();
-        this.approvedComment.setId(APPROVED_COMMENT_ID);
-        this.approvedComment.setAuthor("author1");
-        this.approvedComment.setText("commentText1");
-        this.approvedComment.setCreatedDate(CREATED_DATE);
-        this.approvedComment.setApprovedComment(true);
-        this.approvedComment.setPost(publishedPost);
+        this.approvedComment = myDB.getComment_bo_1();
 
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         validator = factory.getValidator();

@@ -1,5 +1,6 @@
 package com.skwarek.blog.data.entity;
 
+import com.skwarek.blog.MyEmbeddedDatabase;
 import org.apache.commons.lang.SerializationUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,18 +14,13 @@ import static junit.framework.TestCase.assertEquals;
  */
 public class TestUser {
 
-    private final static long USER_ID = 1;
-
     private User user;
 
     @Before
     public void setUp() {
-        this.user = new User();
-        this.user.setId(USER_ID);
-        this.user.setUsername("user1");
-        this.user.setPassword("pass1");
-        this.user.setEnabled(true);
-        this.user.setRole("ROLE_ADMIN");
+        MyEmbeddedDatabase myDB = new MyEmbeddedDatabase();
+
+        this.user = myDB.getUser_no_1();
     }
 
     @Test
