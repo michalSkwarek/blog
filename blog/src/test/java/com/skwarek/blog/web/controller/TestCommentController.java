@@ -2,7 +2,6 @@ package com.skwarek.blog.web.controller;
 
 import com.skwarek.blog.MyEmbeddedDatabase;
 import com.skwarek.blog.data.entity.Comment;
-import com.skwarek.blog.data.entity.Post;
 import com.skwarek.blog.service.CommentService;
 import org.junit.Before;
 import org.junit.Test;
@@ -10,11 +9,6 @@ import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
@@ -51,6 +45,7 @@ public class TestCommentController {
         this.notApprovedComment = myDB.getComment_bo_2();
 
         this.commentService = mock(CommentService.class);
+
         this.commentController = new CommentController(this.commentService);
 
         this.mockMvc = MockMvcBuilders.standaloneSetup(this.commentController)

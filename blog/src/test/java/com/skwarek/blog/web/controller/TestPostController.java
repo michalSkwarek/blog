@@ -85,6 +85,7 @@ public class TestPostController {
         this.notApprovedComment = myDB.getComment_bo_2();
 
         this.postService = mock(PostService.class);
+
         this.postController = new PostController(this.postService);
 
         this.mockMvc = MockMvcBuilders.standaloneSetup(this.postController)
