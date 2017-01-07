@@ -58,17 +58,17 @@ public class ApplicationContextConfiguration extends WebMvcConfigurerAdapter {
         registry.addResourceHandler("/resources/**").addResourceLocations("/resources/");
     }
 
-    @Bean
-    public TilesConfigurer tilesConfigurer() {
-        TilesConfigurer tilesConfigurer = new TilesConfigurer();
-        tilesConfigurer.setDefinitions("/WEB-INF/tiles/tiles.xml");
-        tilesConfigurer.setCheckRefresh(true);
-        return tilesConfigurer;
-    }
-
-    @Override
-    public void configureViewResolvers(ViewResolverRegistry registry) {
-        TilesViewResolver viewResolver = new TilesViewResolver();
-        registry.viewResolver(viewResolver);
-    }
+//    @Bean
+//    public TilesConfigurer tilesConfigurer() {
+//        TilesConfigurer tilesConfigurer = new TilesConfigurer();
+//        tilesConfigurer.setDefinitions("/WEB-INF/tiles/tiles.xml");
+//        tilesConfigurer.setCheckRefresh(true);
+//        return tilesConfigurer;
+//    }
+//
+//    @Override
+//    public void configureViewResolvers(ViewResolverRegistry registry) {
+//        TilesViewResolver viewResolver = new TilesViewResolver();
+//        registry.viewResolver(viewResolver);
+//    }
 }
