@@ -1,5 +1,6 @@
 package com.skwarek.blog.web.controller;
 
+import com.skwarek.blog.MyEmbeddedDatabase;
 import com.skwarek.blog.data.entity.Comment;
 import com.skwarek.blog.data.entity.Post;
 import com.skwarek.blog.service.CommentService;
@@ -34,10 +35,6 @@ public class TestCommentController {
     private final static long APPROVED_COMMENT_ID = 1;
     private final static long NOT_APPROVED_COMMENT_ID = 2;
 
-    private final static Date CREATED_DATE = new GregorianCalendar(2000, Calendar.JANUARY, 11, 11, 22, 33).getTime();
-
-    private Post publishedPost;
-
     private Comment approvedComment;
     private Comment notApprovedComment;
 
@@ -48,40 +45,22 @@ public class TestCommentController {
 
     @Before
     public void setUp() {
-        this.publishedPost = new Post();
-        this.publishedPost.setId(PUBLISHED_POST_ID);
+        MyEmbeddedDatabase myDB = new MyEmbeddedDatabase();
 
-        this.approvedComment = new Comment();
-        this.approvedComment.setId(APPROVED_COMMENT_ID);
-        this.approvedComment.setAuthor("author1");
-        this.approvedComment.setText("commentText1");
-        this.approvedComment.setCreatedDate(CREATED_DATE);
-        this.approvedComment.setApprovedComment(true);
-        this.approvedComment.setPost(publishedPost);
-
-        this.notApprovedComment = new Comment();
-        this.notApprovedComment.setId(NOT_APPROVED_COMMENT_ID);
-        this.notApprovedComment.setAuthor("author2");
-        this.notApprovedComment.setText("commentText2");
-        this.notApprovedComment.setCreatedDate(CREATED_DATE);
-        this.notApprovedComment.setApprovedComment(false);
-        this.notApprovedComment.setPost(publishedPost);
-
-        this.publishedPost.setComments(Arrays.asList(approvedComment, notApprovedComment));
+        this.approvedComment = myDB.getComment_bo_1();
+        this.notApprovedComment = myDB.getComment_bo_2();
 
         this.commentService = mock(CommentService.class);
         this.commentController = new CommentController(this.commentService);
 
         this.mockMvc = MockMvcBuilders.standaloneSetup(this.commentController)
                 .build();
-
-        given(commentService.read(NOT_APPROVED_COMMENT_ID)).willReturn(notApprovedComment);
-
-        given(commentService.read(APPROVED_COMMENT_ID)).willReturn(approvedComment);
     }
 
     @Test
     public void approveComment_ShouldSetApproveFlagToComment() throws Exception {
+        given(commentService.read(NOT_APPROVED_COMMENT_ID)).willReturn(notApprovedComment);
+
         mockMvc.perform(get("/comment/{commentId}/approve", NOT_APPROVED_COMMENT_ID))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(POST_PAGE + "/" + PUBLISHED_POST_ID))
@@ -94,6 +73,8 @@ public class TestCommentController {
 
     @Test
     public void removeComment_ShouldRemoveComment() throws Exception {
+        given(commentService.read(APPROVED_COMMENT_ID)).willReturn(approvedComment);
+
         mockMvc.perform(get("/comment/{commentId}/remove", APPROVED_COMMENT_ID))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(POST_PAGE +"/" + PUBLISHED_POST_ID))

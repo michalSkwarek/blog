@@ -18,7 +18,7 @@ public class Post extends BaseEntity implements Serializable {
 
     private static final long serialVersionUID = -7880798132853619385L;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "author_id")
     private User author;
 

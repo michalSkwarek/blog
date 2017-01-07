@@ -1,8 +1,9 @@
 package com.skwarek.blog.data.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Michal on 04/01/2017.
@@ -20,6 +21,9 @@ public class User extends BaseEntity implements Serializable {
     private Boolean enabled;
 
     private String role;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER, mappedBy = "author")
+    private List<Post> posts = new ArrayList<>();
 
     public User() { }
 
@@ -53,6 +57,14 @@ public class User extends BaseEntity implements Serializable {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public List<Post> getPosts() {
+        return posts;
+    }
+
+    public void setPosts(List<Post> posts) {
+        this.posts = posts;
     }
 
     @Override

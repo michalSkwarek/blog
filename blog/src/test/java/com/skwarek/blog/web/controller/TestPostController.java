@@ -1,5 +1,6 @@
 package com.skwarek.blog.web.controller;
 
+import com.skwarek.blog.MyEmbeddedDatabase;
 import com.skwarek.blog.data.entity.Comment;
 import com.skwarek.blog.data.entity.Post;
 import com.skwarek.blog.data.entity.User;
@@ -41,10 +42,7 @@ public class TestPostController {
     private final static String HOME_PAGE = "/";
     private final static String POST_PAGE = "/post";
 
-    private final static long FIRST_USER_ID = 1;
-    private final static long SECOND_USER_ID = 2;
-
-    private final static long NON_EXISTENT_HIBERNATE_ID = 0;
+    private final static long ZERO_HIBERNATE_ID = 0;
 
     private final static long FIRST_PUBLISHED_POST_ID = 1;
     private final static long SECOND_PUBLISHED_POST_ID = 2;
@@ -54,8 +52,8 @@ public class TestPostController {
     private final static long APPROVED_COMMENT_ID = 1;
     private final static long NOT_APPROVED_COMMENT_ID = 2;
 
-    private final static Date CREATED_DATE = new GregorianCalendar(2000, Calendar.JANUARY, 11, 11, 22, 33).getTime();
-    private final static Date PUBLISHED_DATE = new GregorianCalendar(2000, Calendar.JANUARY, 12, 22, 33, 44).getTime();
+    private final static Date CREATED_DATE = MyEmbeddedDatabase.getCreatedDate();
+    private final static Date PUBLISHED_DATE = MyEmbeddedDatabase.getPublishedDate();
 
     private User firstUser;
     private User secondUser;
@@ -63,9 +61,6 @@ public class TestPostController {
     private Post firstPublishedPost;
     private Post secondPublishedPost;
     private Post draftPost;
-
-    private List<Post> listOfPublishedPosts;
-    private List<Post> listOfDraftPosts;
 
     private Comment approvedComment;
     private Comment notApprovedComment;
@@ -77,87 +72,33 @@ public class TestPostController {
 
     @Before
     public void setUp() {
-        this.firstUser = new User();
-        this.firstUser.setId(FIRST_USER_ID);
+        MyEmbeddedDatabase myDB = new MyEmbeddedDatabase();
 
-        this.secondUser = new User();
-        this.secondUser.setId(SECOND_USER_ID);
+        this.firstUser = myDB.getUser_no_1();
+        this.secondUser = myDB.getUser_no_2();
 
-        this.firstPublishedPost = new Post();
-        this.firstPublishedPost.setId(FIRST_PUBLISHED_POST_ID);
-        this.firstPublishedPost.setAuthor(firstUser);
-        this.firstPublishedPost.setTitle("title1");
-        this.firstPublishedPost.setText("text1");
-        this.firstPublishedPost.setCreatedDate(CREATED_DATE);
-        this.firstPublishedPost.setPublishedDate(PUBLISHED_DATE);
+        this.firstPublishedPost = myDB.getPost_no_1();
+        this.secondPublishedPost = myDB.getPost_no_2();
+        this.draftPost = myDB.getPost_no_3();
 
-        this.secondPublishedPost = new Post();
-        this.secondPublishedPost.setId(SECOND_PUBLISHED_POST_ID);
-        this.secondPublishedPost.setAuthor(secondUser);
-        this.secondPublishedPost.setTitle("title2");
-        this.secondPublishedPost.setText("text2");
-        this.secondPublishedPost.setCreatedDate(CREATED_DATE);
-        this.secondPublishedPost.setPublishedDate(PUBLISHED_DATE);
-
-        this.listOfPublishedPosts = new ArrayList<>();
-        this.listOfPublishedPosts.add(firstPublishedPost);
-        this.listOfPublishedPosts.add(secondPublishedPost);
-
-        this.draftPost = new Post();
-        this.draftPost.setId(DRAFT_POST_ID);
-        this.draftPost.setAuthor(firstUser);
-        this.draftPost.setTitle("title3");
-        this.draftPost.setText("text3");
-        this.draftPost.setCreatedDate(CREATED_DATE);
-
-        this.listOfDraftPosts = new ArrayList<>();
-        this.listOfDraftPosts.add(draftPost);
-
-        this.approvedComment = new Comment();
-        this.approvedComment.setId(APPROVED_COMMENT_ID);
-        this.approvedComment.setAuthor("author1");
-        this.approvedComment.setText("commentText1");
-        this.approvedComment.setCreatedDate(CREATED_DATE);
-        this.approvedComment.setApprovedComment(true);
-        this.approvedComment.setPost(firstPublishedPost);
-
-        this.notApprovedComment = new Comment();
-        this.notApprovedComment.setId(NOT_APPROVED_COMMENT_ID);
-        this.notApprovedComment.setAuthor("author2");
-        this.notApprovedComment.setText("commentText2");
-        this.notApprovedComment.setCreatedDate(CREATED_DATE);
-        this.notApprovedComment.setApprovedComment(false);
-        this.notApprovedComment.setPost(firstPublishedPost);
-
-        this.firstPublishedPost.setComments(Arrays.asList(approvedComment, notApprovedComment));
+        this.approvedComment = myDB.getComment_bo_1();
+        this.notApprovedComment = myDB.getComment_bo_2();
 
         this.postService = mock(PostService.class);
         this.postController = new PostController(this.postService);
 
         this.mockMvc = MockMvcBuilders.standaloneSetup(this.postController)
                 .build();
-
-        given(this.postService.findAllPublishedPosts()).willReturn(listOfPublishedPosts);
-        given(this.postService.read(FIRST_PUBLISHED_POST_ID)).willReturn(firstPublishedPost);
-
-        given(this.postService.findAllDrafts()).willReturn(listOfDraftPosts);
-        given(this.postService.read(DRAFT_POST_ID)).willReturn(draftPost);
-
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
-                draftPost.setPublishedDate(PUBLISHED_DATE);
-                return null;
-            }
-        }).when(this.postService).publishPost(draftPost);
     }
 
     @Test
     public void showPublishedPosts_ShouldAddPostEntriesToModelAndRenderPostListView() throws Exception {
+        given(this.postService.findAllPublishedPosts()).willReturn(Arrays.asList(firstPublishedPost, secondPublishedPost));
+
         mockMvc.perform(get("/"))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("posts"))
-                .andExpect(model().attribute("posts", listOfPublishedPosts))
+                .andExpect(model().attribute("posts", Arrays.asList(firstPublishedPost, secondPublishedPost)))
                 .andExpect(model().attribute("posts", hasSize(2)))
                 .andExpect(model().attribute("posts", hasItem(
                         allOf(
@@ -188,10 +129,12 @@ public class TestPostController {
 
     @Test
     public void showDrafts_ShouldAddDraftEntriesToModelAndRenderDraftListView() throws Exception {
+        given(this.postService.findAllDrafts()).willReturn(Arrays.asList(draftPost));
+
         mockMvc.perform(get("/drafts"))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("posts"))
-                .andExpect(model().attribute("posts", listOfDraftPosts))
+                .andExpect(model().attribute("posts", Arrays.asList(draftPost)))
                 .andExpect(model().attribute("posts", hasSize(1)))
                 .andExpect(model().attribute("posts", hasItem(
                         allOf(
@@ -225,6 +168,8 @@ public class TestPostController {
 
     @Test
     public void showPost_PostEntryFound_ShouldAddPostEntryToModelAndRenderPostEntryView() throws Exception {
+        given(this.postService.read(FIRST_PUBLISHED_POST_ID)).willReturn(firstPublishedPost);
+
         mockMvc.perform(get("/post/{postId}", FIRST_PUBLISHED_POST_ID))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("post"))
@@ -244,6 +189,8 @@ public class TestPostController {
 
     @Test
     public void showPost_PostAndCommentsEntryFound_ShouldAddCommentsEntryToModelAndRenderCommentsEntryView() throws Exception {
+        given(this.postService.read(FIRST_PUBLISHED_POST_ID)).willReturn(firstPublishedPost);
+
         mockMvc.perform(get("/post/{postId}", FIRST_PUBLISHED_POST_ID))
                 .andExpect(model().attributeExists("comments"))
                 .andExpect(model().attribute("comments", Arrays.asList(approvedComment, notApprovedComment)))
@@ -275,7 +222,7 @@ public class TestPostController {
         mockMvc.perform(get("/post/new"))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("post"))
-                .andExpect(model().attribute("post", hasProperty("id", is(NON_EXISTENT_HIBERNATE_ID))))
+                .andExpect(model().attribute("post", hasProperty("id", is(ZERO_HIBERNATE_ID))))
                 .andExpect(model().attribute("post", hasProperty("author", nullValue())))
                 .andExpect(model().attribute("post", hasProperty("title", nullValue())))
                 .andExpect(model().attribute("post", hasProperty("text", nullValue())))
@@ -298,7 +245,7 @@ public class TestPostController {
                 .andExpect(model().attributeHasErrors("post"))
                 .andExpect(model().attributeHasFieldErrors("post", "title"))
                 .andExpect(model().attributeHasFieldErrors("post", "text"))
-                .andExpect(model().attribute("post", hasProperty("id", is(NON_EXISTENT_HIBERNATE_ID))))
+                .andExpect(model().attribute("post", hasProperty("id", is(ZERO_HIBERNATE_ID))))
                 .andExpect(model().attribute("post", hasProperty("author", nullValue())))
                 .andExpect(model().attribute("post", hasProperty("title", isEmptyString())))
                 .andExpect(model().attribute("post", hasProperty("text", isEmptyString())))
@@ -328,7 +275,7 @@ public class TestPostController {
 
         Post formPost = formObjectArgument.getValue();
 
-        assertThat(formPost.getId(), is(NON_EXISTENT_HIBERNATE_ID));
+        assertThat(formPost.getId(), is(ZERO_HIBERNATE_ID));
         assertThat(formPost.getAuthor(), nullValue());
         assertThat(formPost.getTitle(), is("sampleTitle"));
         assertThat(formPost.getText(), is("sampleText"));
@@ -338,6 +285,8 @@ public class TestPostController {
 
     @Test
     public void initEditPostForm_ShouldAddPostToModelAndRenderPostFormView() throws Exception {
+        given(this.postService.read(FIRST_PUBLISHED_POST_ID)).willReturn(firstPublishedPost);
+
         mockMvc.perform(get("/post/{postId}/edit", FIRST_PUBLISHED_POST_ID))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("post"))
@@ -366,7 +315,7 @@ public class TestPostController {
                 .andExpect(model().attributeHasErrors("post"))
                 .andExpect(model().attributeHasFieldErrors("post", "title"))
                 .andExpect(model().attributeHasFieldErrors("post", "text"))
-                .andExpect(model().attribute("post", hasProperty("id", is(NON_EXISTENT_HIBERNATE_ID))))
+                .andExpect(model().attribute("post", hasProperty("id", is(ZERO_HIBERNATE_ID))))
                 .andExpect(model().attribute("post", hasProperty("author", nullValue())))
                 .andExpect(model().attribute("post", hasProperty("title", isEmptyString())))
                 .andExpect(model().attribute("post", hasProperty("text", isEmptyString())))
@@ -396,7 +345,7 @@ public class TestPostController {
 
         Post formPost = formObjectArgument.getValue();
 
-        assertThat(formPost.getId(), is(NON_EXISTENT_HIBERNATE_ID));
+        assertThat(formPost.getId(), is(ZERO_HIBERNATE_ID));
         assertThat(formPost.getAuthor(), nullValue());
         assertThat(formPost.getTitle(), is("sampleTitle"));
         assertThat(formPost.getText(), is("sampleText"));
@@ -406,6 +355,15 @@ public class TestPostController {
 
     @Test
     public void publishPost_ShouldAddPublishedDateToPost() throws Exception {
+        given(postService.read(DRAFT_POST_ID)).willReturn(draftPost);
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
+                draftPost.setPublishedDate(PUBLISHED_DATE);
+                return null;
+            }
+        }).when(this.postService).publishPost(draftPost);
+
         mockMvc.perform(get("/post/{postId}/publish", DRAFT_POST_ID))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("post"))
@@ -439,7 +397,7 @@ public class TestPostController {
         mockMvc.perform(get("/post/{postId}/comment", FIRST_PUBLISHED_POST_ID))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("comment"))
-                .andExpect(model().attribute("comment", hasProperty("id", is(NON_EXISTENT_HIBERNATE_ID))))
+                .andExpect(model().attribute("comment", hasProperty("id", is(ZERO_HIBERNATE_ID))))
                 .andExpect(model().attribute("comment", hasProperty("author", nullValue())))
                 .andExpect(model().attribute("comment", hasProperty("text", nullValue())))
                 .andExpect(model().attribute("comment", hasProperty("createdDate", nullValue())))
@@ -462,7 +420,7 @@ public class TestPostController {
                 .andExpect(model().attributeHasErrors("comment"))
                 .andExpect(model().attributeHasFieldErrors("comment", "author"))
                 .andExpect(model().attributeHasFieldErrors("comment", "text"))
-                .andExpect(model().attribute("comment", hasProperty("id", is(NON_EXISTENT_HIBERNATE_ID))))
+                .andExpect(model().attribute("comment", hasProperty("id", is(ZERO_HIBERNATE_ID))))
                 .andExpect(model().attribute("comment", hasProperty("author", isEmptyString())))
                 .andExpect(model().attribute("comment", hasProperty("text", isEmptyString())))
                 .andExpect(model().attribute("comment", hasProperty("createdDate", nullValue())))
@@ -492,7 +450,7 @@ public class TestPostController {
 
         Comment formComment = formObjectArgument.getValue();
 
-        assertThat(formComment.getId(), is(NON_EXISTENT_HIBERNATE_ID));
+        assertThat(formComment.getId(), is(ZERO_HIBERNATE_ID));
         assertThat(formComment.getAuthor(), is("sampleAuthor"));
         assertThat(formComment.getText(), is("sampleText"));
         assertThat(formComment.getCreatedDate(), nullValue());
