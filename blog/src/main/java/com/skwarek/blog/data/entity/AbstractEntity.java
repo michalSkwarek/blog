@@ -9,10 +9,10 @@ import javax.persistence.MappedSuperclass;
  * Created by Michal on 04/01/2017.
  */
 @MappedSuperclass
-public class BaseEntity {
+public class AbstractEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private long id;
 
     public long getId() {

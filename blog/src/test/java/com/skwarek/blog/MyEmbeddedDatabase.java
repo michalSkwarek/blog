@@ -24,8 +24,8 @@ public class MyEmbeddedDatabase {
     private Post post_no_2;
     private Post post_no_3;
 
-    private Comment comment_bo_1;
-    private Comment comment_bo_2;
+    private Comment comment_no_1;
+    private Comment comment_no_2;
 
     public MyEmbeddedDatabase() {
 
@@ -38,10 +38,10 @@ public class MyEmbeddedDatabase {
 
         this.user_no_2 = new User();
         this.user_no_2.setId(2L);
-        this.user_no_1.setUsername("user2");
-        this.user_no_1.setPassword("pass2");
-        this.user_no_1.setEnabled(true);
-        this.user_no_1.setRole("ROLE_ADMIN");
+        this.user_no_2.setUsername("user2");
+        this.user_no_2.setPassword("pass2");
+        this.user_no_2.setEnabled(true);
+        this.user_no_2.setRole("ROLE_ADMIN");
 
         this.post_no_1 = new Post();
         this.post_no_1.setId(1L);
@@ -69,23 +69,23 @@ public class MyEmbeddedDatabase {
         this.user_no_1.setPosts(Arrays.asList(post_no_1, post_no_3));
         this.user_no_2.setPosts(Arrays.asList(post_no_2));
 
-        this.comment_bo_1 = new Comment();
-        this.comment_bo_1.setId(1L);
-        this.comment_bo_1.setAuthor("author1");
-        this.comment_bo_1.setText("commentText1");
-        this.comment_bo_1.setCreatedDate(CREATED_DATE);
-        this.comment_bo_1.setApprovedComment(true);
-        this.comment_bo_1.setPost(post_no_1);
+        this.comment_no_1 = new Comment();
+        this.comment_no_1.setId(1L);
+        this.comment_no_1.setAuthor("author1");
+        this.comment_no_1.setText("commentText1");
+        this.comment_no_1.setCreatedDate(CREATED_DATE);
+        this.comment_no_1.setApprovedComment(true);
+        this.comment_no_1.setPost(post_no_1);
 
-        this.comment_bo_2 = new Comment();
-        this.comment_bo_2.setId(2L);
-        this.comment_bo_2.setAuthor("author2");
-        this.comment_bo_2.setText("commentText2");
-        this.comment_bo_2.setCreatedDate(CREATED_DATE);
-        this.comment_bo_2.setApprovedComment(false);
-        this.comment_bo_2.setPost(post_no_1);
+        this.comment_no_2 = new Comment();
+        this.comment_no_2.setId(2L);
+        this.comment_no_2.setAuthor("author2");
+        this.comment_no_2.setText("commentText2");
+        this.comment_no_2.setCreatedDate(CREATED_DATE);
+        this.comment_no_2.setApprovedComment(false);
+        this.comment_no_2.setPost(post_no_1);
 
-        this.post_no_1.setComments(Arrays.asList(comment_bo_1, comment_bo_2));
+        this.post_no_1.setComments(Arrays.asList(comment_no_1, comment_no_2));
     }
 
     public static Date getCreatedDate() {
@@ -116,11 +116,11 @@ public class MyEmbeddedDatabase {
         return post_no_3;
     }
 
-    public Comment getComment_bo_1() {
-        return comment_bo_1;
+    public Comment getComment_no_1() {
+        return comment_no_1;
     }
 
-    public Comment getComment_bo_2() {
-        return comment_bo_2;
+    public Comment getComment_no_2() {
+        return comment_no_2;
     }
 }

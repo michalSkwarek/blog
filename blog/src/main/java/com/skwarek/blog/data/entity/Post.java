@@ -14,7 +14,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "post")
-public class Post extends BaseEntity implements Serializable {
+public class Post extends AbstractEntity implements Serializable {
 
     private static final long serialVersionUID = -7880798132853619385L;
 

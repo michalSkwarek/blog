@@ -10,7 +10,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "user")
-public class User extends BaseEntity implements Serializable {
+public class User extends AbstractEntity implements Serializable {
 
     private static final long serialVersionUID = 8677134510405657519L;
 
@@ -85,9 +85,7 @@ public class User extends BaseEntity implements Serializable {
 
 //    @Override
 //    public String toString() {
-//        return "User{" +
-//                "username=" + username +
-//                '}';
+//        return username;
 //    }
 
 

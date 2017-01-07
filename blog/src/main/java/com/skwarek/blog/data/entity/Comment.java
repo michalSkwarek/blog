@@ -12,7 +12,7 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "comment")
-public class Comment extends BaseEntity implements Serializable {
+public class Comment extends AbstractEntity implements Serializable {
 
     private static final long serialVersionUID = -7098117967486832113L;
 

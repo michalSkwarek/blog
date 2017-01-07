@@ -81,8 +81,8 @@ public class TestPostController {
         this.secondPublishedPost = myDB.getPost_no_2();
         this.draftPost = myDB.getPost_no_3();
 
-        this.approvedComment = myDB.getComment_bo_1();
-        this.notApprovedComment = myDB.getComment_bo_2();
+        this.approvedComment = myDB.getComment_no_1();
+        this.notApprovedComment = myDB.getComment_no_2();
 
         this.postService = mock(PostService.class);
 

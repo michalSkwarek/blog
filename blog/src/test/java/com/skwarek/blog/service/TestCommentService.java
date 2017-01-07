@@ -34,8 +34,8 @@ public class TestCommentService {
     public void setUp() {
         MyEmbeddedDatabase myDB = new MyEmbeddedDatabase();
 
-        this.approvedComment = myDB.getComment_bo_1();
-        this.notApprovedComment = myDB.getComment_bo_2();
+        this.approvedComment = myDB.getComment_no_1();
+        this.notApprovedComment = myDB.getComment_no_2();
 
         this.commentDao = mock(CommentDao.class);
 

@@ -8,9 +8,6 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.Set;
 
 import static junit.framework.TestCase.assertEquals;
@@ -28,7 +25,7 @@ public class TestCommentValidation {
     public void setUp() {
         MyEmbeddedDatabase myDB = new MyEmbeddedDatabase();
 
-        this.approvedComment = myDB.getComment_bo_1();
+        this.approvedComment = myDB.getComment_no_1();
 
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         validator = factory.getValidator();
