@@ -10,8 +10,6 @@ import com.skwarek.blog.data.entity.User;
 import com.skwarek.blog.service.impl.PostServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -28,7 +26,6 @@ import static org.mockito.Mockito.*;
 /**
  * Created by Michal on 02/01/2017.
  */
-@RunWith(MockitoJUnitRunner.class)
 @ContextConfiguration(classes = ApplicationContextConfiguration.class)
 public class TestPostService {
 

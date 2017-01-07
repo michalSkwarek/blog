@@ -24,7 +24,6 @@ public class TestCommentValidation {
     private final static long APPROVED_COMMENT_ID = 1;
 
     private final static Date CREATED_DATE = new GregorianCalendar(2000, Calendar.JANUARY, 11, 11, 22, 33).getTime();
-    private final static Date PUBLISHED_DATE = new GregorianCalendar(2000, Calendar.JANUARY, 12, 22, 33, 44).getTime();
 
     private Post publishedPost;
 
