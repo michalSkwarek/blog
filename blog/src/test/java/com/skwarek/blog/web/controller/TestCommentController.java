@@ -24,7 +24,7 @@ public class TestCommentController {
     private final static String REDIRECT_TO = "redirect:";
     private final static String POST_PAGE = "/post";
 
-    private final static long PUBLISHED_POST_ID = 1;
+    private final static long FIRST_PUBLISHED_POST_ID = 1;
 
     private final static long APPROVED_COMMENT_ID = 1;
     private final static long NOT_APPROVED_COMMENT_ID = 2;
@@ -58,8 +58,8 @@ public class TestCommentController {
 
         mockMvc.perform(get("/comment/{commentId}/approve", NOT_APPROVED_COMMENT_ID))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(POST_PAGE + "/" + PUBLISHED_POST_ID))
-                .andExpect(view().name(REDIRECT_TO + POST_PAGE + "/" + PUBLISHED_POST_ID));
+                .andExpect(redirectedUrl(POST_PAGE + "/" + FIRST_PUBLISHED_POST_ID))
+                .andExpect(view().name(REDIRECT_TO + POST_PAGE + "/" + FIRST_PUBLISHED_POST_ID));
 
         verify(commentService, times(1)).read(NOT_APPROVED_COMMENT_ID);
         verify(commentService, times(1)).approve(notApprovedComment);
@@ -72,8 +72,8 @@ public class TestCommentController {
 
         mockMvc.perform(get("/comment/{commentId}/remove", APPROVED_COMMENT_ID))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(POST_PAGE +"/" + PUBLISHED_POST_ID))
-                .andExpect(view().name(REDIRECT_TO + POST_PAGE + "/" + PUBLISHED_POST_ID));
+                .andExpect(redirectedUrl(POST_PAGE +"/" + FIRST_PUBLISHED_POST_ID))
+                .andExpect(view().name(REDIRECT_TO + POST_PAGE + "/" + FIRST_PUBLISHED_POST_ID));
 
         verify(commentService, times(1)).read(APPROVED_COMMENT_ID);
         verify(commentService, times(1)).removeComment(APPROVED_COMMENT_ID);

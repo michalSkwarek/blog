@@ -4,10 +4,7 @@ import com.skwarek.blog.data.entity.Comment;
 import com.skwarek.blog.data.entity.Post;
 import com.skwarek.blog.data.entity.User;
 
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
+import java.util.*;
 
 /**
  * Created by Michal on 07/01/2017.
@@ -67,7 +64,7 @@ public class MyEmbeddedDatabase {
         this.post_no_3.setCreatedDate(CREATED_DATE);
 
         this.user_no_1.setPosts(Arrays.asList(post_no_1, post_no_3));
-        this.user_no_2.setPosts(Arrays.asList(post_no_2));
+        this.user_no_2.setPosts(Collections.singletonList(post_no_2));
 
         this.comment_no_1 = new Comment();
         this.comment_no_1.setId(1L);

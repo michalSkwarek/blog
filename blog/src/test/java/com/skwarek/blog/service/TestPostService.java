@@ -35,8 +35,8 @@ public class TestPostService {
     private final static Date CREATED_DATE = MyEmbeddedDatabase.getCreatedDate();
     private final static Date PUBLISHED_DATE = MyEmbeddedDatabase.getPublishedDate();
 
-    private User firstUser;
-    private User secondUser;
+    private User firstAuthor;
+    private User secondAuthor;
 
     private Post firstPublishedPost;
     private Post secondPublishedPost;
@@ -64,8 +64,8 @@ public class TestPostService {
     public void setUp() {
         MyEmbeddedDatabase myDB = new MyEmbeddedDatabase();
 
-        this.firstUser = myDB.getUser_no_1();
-        this.secondUser = myDB.getUser_no_2();
+        this.firstAuthor = myDB.getUser_no_1();
+        this.secondAuthor = myDB.getUser_no_2();
 
         this.firstPublishedPost = myDB.getPost_no_1();
         this.secondPublishedPost = myDB.getPost_no_2();
@@ -107,7 +107,7 @@ public class TestPostService {
         assertEquals(2, found.size());
 
         assertEquals(1, found.get(0).getId());
-        assertEquals(firstUser, found.get(0).getAuthor());
+        assertEquals(firstAuthor, found.get(0).getAuthor());
         assertEquals("title1", found.get(0).getTitle());
         assertEquals("text1", found.get(0).getText());
         assertEquals(CREATED_DATE, found.get(0).getCreatedDate());
@@ -115,12 +115,12 @@ public class TestPostService {
         assertEquals(Arrays.asList(approvedComment, notApprovedComment), found.get(0).getComments());
 
         assertEquals(2, found.get(1).getId());
-        assertEquals(secondUser, found.get(1).getAuthor());
+        assertEquals(secondAuthor, found.get(1).getAuthor());
         assertEquals("title2", found.get(1).getTitle());
         assertEquals("text2", found.get(1).getText());
         assertEquals(CREATED_DATE, found.get(1).getCreatedDate());
         assertEquals(PUBLISHED_DATE, found.get(1).getPublishedDate());
-        assertEquals(Arrays.asList(), found.get(1).getComments());
+        assertEquals(Collections.emptyList(), found.get(1).getComments());
 
         verify(postDao, times(1)).findAllPublishedPosts();
         verifyNoMoreInteractions(postDao);
@@ -129,19 +129,19 @@ public class TestPostService {
     @Test
     @SuppressWarnings("unchecked")
     public void testFindAllDrafts() throws Exception {
-        given(this.postDao.findAllDrafts()).willReturn(Arrays.asList(draftPost));
+        given(this.postDao.findAllDrafts()).willReturn(Collections.singletonList(draftPost));
 
         List<Post> found = postService.findAllDrafts();
 
         assertEquals(1, found.size());
 
         assertEquals(3, found.get(0).getId());
-        assertEquals(firstUser, found.get(0).getAuthor());
+        assertEquals(firstAuthor, found.get(0).getAuthor());
         assertEquals("title3", found.get(0).getTitle());
         assertEquals("text3", found.get(0).getText());
         assertEquals(CREATED_DATE, found.get(0).getCreatedDate());
         assertEquals(null, found.get(0).getPublishedDate());
-        assertEquals(Arrays.asList(), found.get(0).getComments());
+        assertEquals(Collections.emptyList(), found.get(0).getComments());
 
         verify(postDao, times(1)).findAllDrafts();
         verifyNoMoreInteractions(postDao);
@@ -150,17 +150,17 @@ public class TestPostService {
     @Test
     public void testCreatePost() throws Exception {
         given(securityContext.getAuthentication()).willReturn(authentication);
-        given(authentication.getName()).willReturn(firstUser.getUsername());
-        given(this.userDao.findUserByUsername(firstUser.getUsername())).willReturn(firstUser);
+        given(authentication.getName()).willReturn(firstAuthor.getUsername());
+        given(this.userDao.findUserByUsername(firstAuthor.getUsername())).willReturn(firstAuthor);
 
         SecurityContextHolder.setContext(securityContext);
 
         postService.createPost(newPost);
 
         assertNotNull(newPost.getCreatedDate());
-        assertEquals(firstUser, newPost.getAuthor());
+        assertEquals(firstAuthor, newPost.getAuthor());
 
-        verify(userDao, times(1)).findUserByUsername(firstUser.getUsername());
+        verify(userDao, times(1)).findUserByUsername(firstAuthor.getUsername());
         verifyNoMoreInteractions(userDao);
         verify(postDao, times(1)).create(newPost);
         verifyNoMoreInteractions(postDao);

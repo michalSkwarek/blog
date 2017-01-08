@@ -12,7 +12,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
@@ -27,12 +26,11 @@ import static org.mockito.Mockito.mock;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = ForTestsApplicationContextConfiguration.class)
-@WebAppConfiguration
 @Transactional
 public class TestPostDao {
 
-    private final static long FIRST_USER_ID = 1;
-    private final static long SECOND_USER_ID = 2;
+    private final static long FIRST_AUTHOR_ID = 1;
+    private final static long SECOND_AUTHOR_ID = 2;
 
     private final static long FIRST_PUBLISHED_POST_ID = 1;
     private final static long SECOND_PUBLISHED_POST_ID = 2;
@@ -44,8 +42,8 @@ public class TestPostDao {
     private final static Date CREATED_DATE = new GregorianCalendar(2000, Calendar.JANUARY, 11, 11, 22, 33).getTime();
     private final static Date PUBLISHED_DATE = new GregorianCalendar(2000, Calendar.JANUARY, 12, 22, 33, 44).getTime();
 
-    private User firstUser;
-    private User secondUser;
+    private User firstAuthor;
+    private User secondAuthor;
 
     private Post newPost;
     private Post editedFirstPublishedPost;
@@ -72,11 +70,11 @@ public class TestPostDao {
 
     @Before
     public void setUp() {
-        this.firstUser = userDao.read(FIRST_USER_ID);
-        this.secondUser = userDao.read(SECOND_USER_ID);
+        this.firstAuthor = userDao.read(FIRST_AUTHOR_ID);
+        this.secondAuthor = userDao.read(SECOND_AUTHOR_ID);
 
         this.newPost = new Post();
-        this.newPost.setAuthor(firstUser);
+        this.newPost.setAuthor(firstAuthor);
         this.newPost.setTitle("newTitle");
         this.newPost.setText("newTest");
         this.newPost.setCreatedDate(CREATED_DATE);
@@ -96,7 +94,7 @@ public class TestPostDao {
         this.securityContext = mock(SecurityContext.class);
 
         given(securityContext.getAuthentication()).willReturn(authentication);
-        given(authentication.getName()).willReturn(firstUser.getUsername());
+        given(authentication.getName()).willReturn(firstAuthor.getUsername());
 
 //        doNothing().when(this.postDao).update(firstPublishedPost);
 //
@@ -133,7 +131,7 @@ public class TestPostDao {
 
         assertNotNull(found);
         assertEquals(FIRST_PUBLISHED_POST_ID, found.getId());
-        assertEquals(firstUser, found.getAuthor());
+        assertEquals(firstAuthor, found.getAuthor());
         assertEquals("title1", found.getTitle());
         assertEquals("text1", found.getText());
         assertEquals(CREATED_DATE, found.getCreatedDate());
@@ -156,7 +154,7 @@ public class TestPostDao {
 
         assertNotNull(found);
         assertEquals(FIRST_PUBLISHED_POST_ID, found.getId());
-        assertEquals(firstUser, found.getAuthor());
+        assertEquals(firstAuthor, found.getAuthor());
         assertEquals("editedTitle", found.getTitle());
         assertEquals("editedText", found.getText());
         assertEquals(CREATED_DATE, found.getCreatedDate());
@@ -175,7 +173,7 @@ public class TestPostDao {
         assertEquals(2 + 1, found.size());
 
         assertEquals(FIRST_PUBLISHED_POST_ID, found.get(0).getId());
-        assertEquals(firstUser, found.get(0).getAuthor());
+        assertEquals(firstAuthor, found.get(0).getAuthor());
         assertEquals("title1", found.get(0).getTitle());
         assertEquals("text1", found.get(0).getText());
         assertEquals(CREATED_DATE, found.get(0).getCreatedDate());
@@ -183,7 +181,7 @@ public class TestPostDao {
         assertEquals(Arrays.asList(approvedComment, notApprovedComment), found.get(0).getComments());
 
         assertEquals(SECOND_PUBLISHED_POST_ID, found.get(1).getId());
-        assertEquals(secondUser, found.get(1).getAuthor());
+        assertEquals(secondAuthor, found.get(1).getAuthor());
         assertEquals("title2", found.get(1).getTitle());
         assertEquals("text2", found.get(1).getText());
         assertEquals(CREATED_DATE, found.get(1).getCreatedDate());
@@ -191,7 +189,7 @@ public class TestPostDao {
         assertEquals(Collections.emptyList(), found.get(1).getComments());
 
         assertEquals(DRAFT_POST_ID, found.get(2).getId());
-        assertEquals(firstUser, found.get(2).getAuthor());
+        assertEquals(firstAuthor, found.get(2).getAuthor());
         assertEquals("title3", found.get(2).getTitle());
         assertEquals("text3", found.get(2).getText());
         assertEquals(CREATED_DATE, found.get(2).getCreatedDate());
@@ -227,7 +225,7 @@ public class TestPostDao {
         assertEquals(2, found.size());
 
         assertEquals(FIRST_PUBLISHED_POST_ID, found.get(0).getId());
-        assertEquals(firstUser, found.get(0).getAuthor());
+        assertEquals(firstAuthor, found.get(0).getAuthor());
         assertEquals("title1", found.get(0).getTitle());
         assertEquals("text1", found.get(0).getText());
         assertEquals(CREATED_DATE, found.get(0).getCreatedDate());
@@ -235,7 +233,7 @@ public class TestPostDao {
         assertEquals(Arrays.asList(approvedComment, notApprovedComment), found.get(0).getComments());
 
         assertEquals(SECOND_PUBLISHED_POST_ID, found.get(1).getId());
-        assertEquals(secondUser, found.get(1).getAuthor());
+        assertEquals(secondAuthor, found.get(1).getAuthor());
         assertEquals("title2", found.get(1).getTitle());
         assertEquals("text2", found.get(1).getText());
         assertEquals(CREATED_DATE, found.get(1).getCreatedDate());
@@ -251,7 +249,7 @@ public class TestPostDao {
         assertEquals(1, found.size());
 
         assertEquals(DRAFT_POST_ID, found.get(0).getId());
-        assertEquals(firstUser, found.get(0).getAuthor());
+        assertEquals(firstAuthor, found.get(0).getAuthor());
         assertEquals("title3", found.get(0).getTitle());
         assertEquals("text3", found.get(0).getText());
         assertEquals(CREATED_DATE, found.get(0).getCreatedDate());

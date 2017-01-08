@@ -55,8 +55,8 @@ public class TestPostController {
     private final static Date CREATED_DATE = MyEmbeddedDatabase.getCreatedDate();
     private final static Date PUBLISHED_DATE = MyEmbeddedDatabase.getPublishedDate();
 
-    private User firstUser;
-    private User secondUser;
+    private User firstAuthor;
+    private User secondAuthor;
 
     private Post firstPublishedPost;
     private Post secondPublishedPost;
@@ -74,8 +74,8 @@ public class TestPostController {
     public void setUp() {
         MyEmbeddedDatabase myDB = new MyEmbeddedDatabase();
 
-        this.firstUser = myDB.getUser_no_1();
-        this.secondUser = myDB.getUser_no_2();
+        this.firstAuthor = myDB.getUser_no_1();
+        this.secondAuthor = myDB.getUser_no_2();
 
         this.firstPublishedPost = myDB.getPost_no_1();
         this.secondPublishedPost = myDB.getPost_no_2();
@@ -104,7 +104,7 @@ public class TestPostController {
                 .andExpect(model().attribute("posts", hasItem(
                         allOf(
                                 hasProperty("id", is(FIRST_PUBLISHED_POST_ID)),
-                                hasProperty("author", is(firstUser)),
+                                hasProperty("author", is(firstAuthor)),
                                 hasProperty("title", is("title1")),
                                 hasProperty("text", is("text1")),
                                 hasProperty("createdDate", is(CREATED_DATE)),
@@ -114,7 +114,7 @@ public class TestPostController {
                 .andExpect(model().attribute("posts", hasItem(
                         allOf(
                                 hasProperty("id", is(SECOND_PUBLISHED_POST_ID)),
-                                hasProperty("author", is(secondUser)),
+                                hasProperty("author", is(secondAuthor)),
                                 hasProperty("title", is("title2")),
                                 hasProperty("text", is("text2")),
                                 hasProperty("createdDate", is(CREATED_DATE)),
@@ -130,17 +130,17 @@ public class TestPostController {
 
     @Test
     public void showDrafts_ShouldAddDraftEntriesToModelAndRenderDraftListView() throws Exception {
-        given(this.postService.findAllDrafts()).willReturn(Arrays.asList(draftPost));
+        given(this.postService.findAllDrafts()).willReturn(Collections.singletonList(draftPost));
 
         mockMvc.perform(get("/drafts"))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("posts"))
-                .andExpect(model().attribute("posts", Arrays.asList(draftPost)))
+                .andExpect(model().attribute("posts", Collections.singletonList(draftPost)))
                 .andExpect(model().attribute("posts", hasSize(1)))
                 .andExpect(model().attribute("posts", hasItem(
                         allOf(
                                 hasProperty("id", is(DRAFT_POST_ID)),
-                                hasProperty("author", is(firstUser)),
+                                hasProperty("author", is(firstAuthor)),
                                 hasProperty("title", is("title3")),
                                 hasProperty("text", is("text3")),
                                 hasProperty("createdDate", is(CREATED_DATE)),
@@ -176,7 +176,7 @@ public class TestPostController {
                 .andExpect(model().attributeExists("post"))
                 .andExpect(model().attribute("post", firstPublishedPost))
                 .andExpect(model().attribute("post", hasProperty("id", is(FIRST_PUBLISHED_POST_ID))))
-                .andExpect(model().attribute("post", hasProperty("author", is(firstUser))))
+                .andExpect(model().attribute("post", hasProperty("author", is(firstAuthor))))
                 .andExpect(model().attribute("post", hasProperty("title", is("title1"))))
                 .andExpect(model().attribute("post", hasProperty("text", is("text1"))))
                 .andExpect(model().attribute("post", hasProperty("createdDate", is(CREATED_DATE))))
@@ -293,7 +293,7 @@ public class TestPostController {
                 .andExpect(model().attributeExists("post"))
                 .andExpect(model().attribute("post", firstPublishedPost))
                 .andExpect(model().attribute("post", hasProperty("id", is(FIRST_PUBLISHED_POST_ID))))
-                .andExpect(model().attribute("post", hasProperty("author", is(firstUser))))
+                .andExpect(model().attribute("post", hasProperty("author", is(firstAuthor))))
                 .andExpect(model().attribute("post", hasProperty("title", is("title1"))))
                 .andExpect(model().attribute("post", hasProperty("text", is("text1"))))
                 .andExpect(model().attribute("post", hasProperty("createdDate", is(CREATED_DATE))))
@@ -369,7 +369,7 @@ public class TestPostController {
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("post"))
                 .andExpect(model().attribute("post", hasProperty("id", is(DRAFT_POST_ID))))
-                .andExpect(model().attribute("post", hasProperty("author", is(firstUser))))
+                .andExpect(model().attribute("post", hasProperty("author", is(firstAuthor))))
                 .andExpect(model().attribute("post", hasProperty("title", is("title3"))))
                 .andExpect(model().attribute("post", hasProperty("text", is("text3"))))
                 .andExpect(model().attribute("post", hasProperty("createdDate", is(CREATED_DATE))))

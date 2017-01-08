@@ -1,7 +1,6 @@
 package com.skwarek.blog.data.entity;
 
 import com.skwarek.blog.MyEmbeddedDatabase;
-import javafx.geometry.Pos;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -9,9 +8,6 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.Set;
 
 import static junit.framework.TestCase.assertEquals;
@@ -21,7 +17,7 @@ import static junit.framework.TestCase.assertEquals;
  */
 public class TestPostValidation {
 
-    private Post publishedPost;
+    private Post firstPublishedPost;
 
     private Validator validator;
 
@@ -29,7 +25,7 @@ public class TestPostValidation {
     public void setUp() {
         MyEmbeddedDatabase myDB = new MyEmbeddedDatabase();
 
-        this.publishedPost = myDB.getPost_no_1();
+        this.firstPublishedPost = myDB.getPost_no_1();
 
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         validator = factory.getValidator();
@@ -38,16 +34,16 @@ public class TestPostValidation {
     @Test
     public void titleAndTextPostAreCorrected() {
         Set<ConstraintViolation<Post>> constraintViolations =
-                validator.validate(publishedPost);
+                validator.validate(firstPublishedPost);
 
         assertEquals(0, constraintViolations.size());
     }
 
     @Test
     public void onlyTitlePostIsEmpty() {
-        publishedPost.setTitle("");
+        firstPublishedPost.setTitle("");
         Set<ConstraintViolation<Post>> constraintViolations =
-                validator.validate(publishedPost);
+                validator.validate(firstPublishedPost);
 
         assertEquals(1, constraintViolations.size());
         assertEquals("{notEmpty}", constraintViolations.iterator().next().getMessage());
@@ -55,9 +51,9 @@ public class TestPostValidation {
 
     @Test
     public void onlyTextPostIsEmpty() {
-        publishedPost.setText("");
+        firstPublishedPost.setText("");
         Set<ConstraintViolation<Post>> constraintViolations =
-                validator.validate(publishedPost);
+                validator.validate(firstPublishedPost);
 
         assertEquals(1, constraintViolations.size());
         assertEquals("{notEmpty}", constraintViolations.iterator().next().getMessage());
@@ -65,10 +61,10 @@ public class TestPostValidation {
 
     @Test
     public void titleAndTextPostAreEmpty() {
-        publishedPost.setTitle("");
-        publishedPost.setText("");
+        firstPublishedPost.setTitle("");
+        firstPublishedPost.setText("");
         Set<ConstraintViolation<Post>> constraintViolations =
-                validator.validate(publishedPost);
+                validator.validate(firstPublishedPost);
 
         assertEquals(2, constraintViolations.size());
         assertEquals("{notEmpty}", constraintViolations.iterator().next().getMessage());

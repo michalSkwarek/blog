@@ -1,20 +1,14 @@
 package com.skwarek.blog.data.dao;
 
-import com.skwarek.blog.MyEmbeddedDatabase;
 import com.skwarek.blog.configuration.ForTestsApplicationContextConfiguration;
-import com.skwarek.blog.data.entity.Comment;
 import com.skwarek.blog.data.entity.Post;
 import com.skwarek.blog.data.entity.User;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
@@ -30,7 +24,6 @@ import static org.junit.Assert.assertNotNull;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {ForTestsApplicationContextConfiguration.class})
-@WebAppConfiguration
 @Transactional
 public class TestUserDao {
 
@@ -38,7 +31,7 @@ public class TestUserDao {
     private static final long SECOND_PUBLISHED_POST_ID = 2;
     private static final long DRAFT_POST_ID = 3;
 
-    private static final long FIRST_USER_ID = 1;
+    private static final long FIRST_AUTHOR_ID = 1;
 
     private Post firstPublishedPost;
     private Post secondPublishedPost;
@@ -59,10 +52,10 @@ public class TestUserDao {
 
     @Test
     public void testReadUser() throws Exception {
-        User found = userDao.read(FIRST_USER_ID);
+        User found = userDao.read(FIRST_AUTHOR_ID);
 
         assertNotNull(found);
-        assertEquals(FIRST_USER_ID, found.getId());
+        assertEquals(FIRST_AUTHOR_ID, found.getId());
         assertEquals("user1", found.getUsername());
         assertEquals("pass1", found.getPassword());
         assertEquals(true, found.getEnabled());
@@ -88,7 +81,7 @@ public class TestUserDao {
         assertEquals("pass2", found.get(1).getPassword());
         assertEquals(true, found.get(1).getEnabled());
         assertEquals("ROLE_ADMIN", found.get(1).getRole());
-        assertEquals(Arrays.asList(secondPublishedPost), found.get(1).getPosts());
+        assertEquals(Collections.singletonList(secondPublishedPost), found.get(1).getPosts());
     }
 
     @Test
@@ -100,7 +93,7 @@ public class TestUserDao {
         User found = userDao.findUserByUsername("user1");
 
         assertNotNull(found);
-        assertEquals(FIRST_USER_ID, found.getId());
+        assertEquals(FIRST_AUTHOR_ID, found.getId());
         assertEquals("user1", found.getUsername());
         assertEquals("pass1", found.getPassword());
         assertEquals(true, found.getEnabled());
