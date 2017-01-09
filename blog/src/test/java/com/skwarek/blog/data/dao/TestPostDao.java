@@ -8,8 +8,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,8 +16,6 @@ import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.mock;
 
 /**
  * Created by Michal on 02/01/2017.
@@ -46,11 +42,6 @@ public class TestPostDao {
     private User secondAuthor;
 
     private Post newPost;
-    private Post editedFirstPublishedPost;
-
-    private Post firstPublishedPost;
-    private Post secondPublishedPost;
-    private Post draftPost;
 
     private Comment newComment;
 
@@ -66,8 +57,6 @@ public class TestPostDao {
     @Autowired
     private CommentDao commentDao;
 
-    SecurityContext securityContext;
-
     @Before
     public void setUp() {
         this.firstAuthor = userDao.read(FIRST_AUTHOR_ID);
@@ -76,12 +65,8 @@ public class TestPostDao {
         this.newPost = new Post();
         this.newPost.setAuthor(firstAuthor);
         this.newPost.setTitle("newTitle");
-        this.newPost.setText("newTest");
+        this.newPost.setText("newText");
         this.newPost.setCreatedDate(CREATED_DATE);
-
-        this.firstPublishedPost = postDao.read(FIRST_PUBLISHED_POST_ID);
-        this.secondPublishedPost = postDao.read(SECOND_PUBLISHED_POST_ID);
-        this.draftPost = postDao.read(DRAFT_POST_ID);
 
         this.newComment = new Comment();
         this.newComment.setAuthor("newAuthor");
@@ -89,41 +74,28 @@ public class TestPostDao {
 
         this.approvedComment = commentDao.read(APPROVED_COMMENT_ID);
         this.notApprovedComment = commentDao.read(NOT_APPROVED_COMMENT_ID);
-
-        Authentication authentication = mock(Authentication.class);
-        this.securityContext = mock(SecurityContext.class);
-
-        given(securityContext.getAuthentication()).willReturn(authentication);
-        given(authentication.getName()).willReturn(firstAuthor.getUsername());
-
-//        doNothing().when(this.postDao).update(firstPublishedPost);
-//
-//        doNothing().when(this.postDao).update(draftPost);
     }
 
-//    @Test
-//    public void testCreatePost() throws Exception {
-//        assertEquals(2, commentDao.findAll().size());
-//        assertEquals(3, postDao.findAll().size());
-//
-//        commentDao.create(newComment);
-//        assertEquals(3, commentDao.findAll().size());
-//
-//        long newCommentId = 3;
-//        Comment found = commentDao.read(newCommentId);
-////        Post post = postDao.read(PUBLISHED_POST_ID);
-//
-//        assertNotNull(found);
-//        assertEquals(newCommentId, found.getId());
-//        assertEquals("newAuthor", found.getAuthor());
-//        assertEquals("newText", found.getText());
-//        assertEquals(CREATED_DATE, found.getCreatedDate());
-//        assertEquals(false, found.isApprovedComment());
-////        assertEquals(post, found.getPost());
-//
-//        assertEquals(3, commentDao.findAll().size());
-//        assertEquals(3, postDao.findAll().size());
-//    }
+    @Test
+    public void testCreatePost() throws Exception {
+        assertEquals(3, postDao.findAll().size());
+        assertEquals(2, userDao.findAll().size());
+        assertEquals(2, commentDao.findAll().size());
+
+        postDao.create(newPost);
+
+        long newPostId = 4;
+        Post found = postDao.read(newPostId);
+
+        assertNotNull(found);
+        assertEquals(newPostId, found.getId());
+        assertEquals(firstAuthor, found.getAuthor());
+        assertEquals("newTitle", found.getTitle());
+        assertEquals("newText", found.getText());
+        assertEquals(CREATED_DATE, found.getCreatedDate());
+        assertEquals(null, found.getPublishedDate());
+        assertEquals(Collections.emptyList(), found.getComments());
+    }
 
     @Test
     public void testReadPost() throws Exception {
@@ -196,26 +168,6 @@ public class TestPostDao {
         assertEquals(null, found.get(2).getPublishedDate());
         assertEquals(Collections.emptyList(), found.get(2).getComments());
     }
-
-//    @Test
-//    public void testCreatePost() throws Exception {
-//        int oldSize = postDao.findAll().size();
-//        postDao.create(newPost);
-//        assertEquals(oldSize + 1, postDao.findAll().size());
-//
-//        long newPostId = 4;
-//
-//        Post found = postDao.read(newPostId);
-//
-//        assertNotNull(found);
-//        assertEquals(newPostId, found.getId());
-//        assertEquals(newPost.getAuthor(), found.getAuthor());
-//        assertEquals(newPost.getTitle(), found.getTitle());
-//        assertEquals(newPost.getText(), found.getText());
-//        assertEquals(newPost.getCreatedDate(), found.getCreatedDate());
-//        assertEquals(null, found.getPublishedDate());
-//        assertEquals(Collections.<Comment>emptyList(), found.getComments());
-//    }
 
     @Test
     @SuppressWarnings("unchecked")

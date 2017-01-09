@@ -31,8 +31,8 @@ public class TestPost extends AbstractJavaBeanTest<Post> {
         assertEquals(1, post.approvedCommentCounter());
     }
 
-//    @Test
-//    public void toStringCorrectness() throws Exception {
-//        assertEquals("title1", post.toString());
-//    }
+    @Test
+    public void toStringCorrectness() throws Exception {
+        assertEquals("title1", post.toString());
+    }
 }

@@ -87,19 +87,8 @@ public class User extends AbstractEntity implements Serializable {
         return username != null ? username.hashCode() : 0;
     }
 
-//    @Override
-//    public String toString() {
-//        return username;
-//    }
-
-
     @Override
     public String toString() {
-        return "User{" + getId() +
-                "username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", enabled=" + enabled +
-                ", role='" + role + '\'' +
-                '}';
+        return username;
     }
 }

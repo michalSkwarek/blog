@@ -34,8 +34,6 @@ public class TestCommentDao {
 
     private Post firstPublishedPost;
 
-    private Comment approvedComment;
-    private Comment notApprovedComment;
     private Comment newComment;
 
     @Autowired
@@ -46,49 +44,41 @@ public class TestCommentDao {
 
     @Before
     public void setUp() {
-        MyEmbeddedDatabase myDB = new MyEmbeddedDatabase();
-
-        this.firstPublishedPost = myDB.getPost_no_1();
-
-        this.approvedComment = myDB.getComment_no_1();
-        this.notApprovedComment = myDB.getComment_no_2();
+        this.firstPublishedPost = postDao.read(FIRST_PUBLISHED_POST_ID);
 
         this.newComment = new Comment();
         this.newComment.setAuthor("newAuthor");
         this.newComment.setText("newText");
         this.newComment.setCreatedDate(CREATED_DATE);
         this.newComment.setApprovedComment(false);
-        this.newComment.setPost(firstPublishedPost);
+        this.newComment.setPost(postDao.read(FIRST_PUBLISHED_POST_ID));
     }
 
-//    @Test
-//    public void testCreateComment() throws Exception {
-//        assertEquals(2, commentDao.findAll().size());
-//        assertEquals(3, postDao.findAll().size());
-//
-//        commentDao.create(newComment);
-//        assertEquals(3, commentDao.findAll().size());
-//
-//        long newCommentId = 3;
-//        Comment found = commentDao.read(newCommentId);
-//        Post post = postDao.read(FIRST_PUBLISHED_POST_ID);
-//
-//        assertNotNull(found);
-//        assertEquals(newCommentId, found.getId());
-//        assertEquals("newAuthor", found.getAuthor());
-//        assertEquals("newText", found.getText());
-//        assertEquals(CREATED_DATE, found.getCreatedDate());
-//        assertEquals(false, found.isApprovedComment());
-//        assertEquals(post, found.getPost());
-//
-//        assertEquals(3, commentDao.findAll().size());
-//        assertEquals(3, postDao.findAll().size());
-//    }
+    @Test
+    public void testCreateComment() throws Exception {
+        assertEquals(2, commentDao.findAll().size());
+        assertEquals(3, postDao.findAll().size());
+
+        commentDao.create(newComment);
+
+        long newCommentId = 3;
+        Comment found = commentDao.read(newCommentId);
+
+        assertNotNull(found);
+        assertEquals(newCommentId, found.getId());
+        assertEquals("newAuthor", found.getAuthor());
+        assertEquals("newText", found.getText());
+        assertEquals(CREATED_DATE, found.getCreatedDate());
+        assertEquals(false, found.isApprovedComment());
+        assertEquals(firstPublishedPost, found.getPost());
+
+        assertEquals(3, commentDao.findAll().size());
+        assertEquals(3, postDao.findAll().size());
+    }
 
     @Test
     public void testReadComment() throws Exception {
         Comment found = commentDao.read(APPROVED_COMMENT_ID);
-        Post post = postDao.read(FIRST_PUBLISHED_POST_ID);
 
         assertNotNull(found);
         assertEquals(APPROVED_COMMENT_ID, found.getId());
@@ -96,7 +86,7 @@ public class TestCommentDao {
         assertEquals("commentText1", found.getText());
         assertEquals(CREATED_DATE, found.getCreatedDate());
         assertEquals(true, found.isApprovedComment());
-        assertEquals(post, found.getPost());
+        assertEquals(firstPublishedPost, found.getPost());
     }
 
     @Test
@@ -109,7 +99,6 @@ public class TestCommentDao {
         commentDao.update(toUpdate);
 
         Comment found = commentDao.read(APPROVED_COMMENT_ID);
-        Post post = postDao.read(FIRST_PUBLISHED_POST_ID);
 
         assertNotNull(found);
         assertEquals(APPROVED_COMMENT_ID, found.getId());
@@ -117,7 +106,7 @@ public class TestCommentDao {
         assertEquals("editedText", found.getText());
         assertEquals(CREATED_DATE, found.getCreatedDate());
         assertEquals(true, found.isApprovedComment());
-        assertEquals(post, found.getPost());
+        assertEquals(firstPublishedPost, found.getPost());
 
         assertEquals(2, commentDao.findAll().size());
         assertEquals(3, postDao.findAll().size());
@@ -126,7 +115,6 @@ public class TestCommentDao {
     @Test
     public void testFindAll() throws Exception {
         List<Comment> found = commentDao.findAll();
-        Post post = postDao.read(FIRST_PUBLISHED_POST_ID);
 
         assertEquals(1 + 1, found.size());
 
@@ -135,14 +123,14 @@ public class TestCommentDao {
         assertEquals("commentText1", found.get(0).getText());
         assertEquals(CREATED_DATE, found.get(0).getCreatedDate());
         assertEquals(true, found.get(0).isApprovedComment());
-        assertEquals(post, found.get(0).getPost());
+        assertEquals(firstPublishedPost, found.get(0).getPost());
 
         assertEquals(2, found.get(1).getId());
         assertEquals("author2", found.get(1).getAuthor());
         assertEquals("commentText2", found.get(1).getText());
         assertEquals(CREATED_DATE, found.get(1).getCreatedDate());
         assertEquals(false, found.get(1).isApprovedComment());
-        assertEquals(post, found.get(1).getPost());
+        assertEquals(firstPublishedPost, found.get(1).getPost());
     }
 
     @Test

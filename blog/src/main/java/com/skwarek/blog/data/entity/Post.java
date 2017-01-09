@@ -126,21 +126,8 @@ public class Post extends AbstractEntity implements Serializable {
         return result;
     }
 
-//    @Override
-//    public String toString() {
-//        return title;
-//    }
-
-
     @Override
     public String toString() {
-        return "Post{" + getId() +
-//                "author=" + author +
-                ", title='" + title + '\'' +
-                ", text='" + text + '\'' +
-                ", createdDate=" + createdDate +
-                ", publishedDate=" + publishedDate +
-//                ", comments=" + comments +
-                '}';
+        return title;
     }
 }
