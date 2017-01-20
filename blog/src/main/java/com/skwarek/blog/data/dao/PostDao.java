@@ -1,7 +1,6 @@
 package com.skwarek.blog.data.dao;
 
 import com.skwarek.blog.data.dao.generic.GenericDao;
-import com.skwarek.blog.data.entity.Comment;
 import com.skwarek.blog.data.entity.Post;
 
 import java.util.List;

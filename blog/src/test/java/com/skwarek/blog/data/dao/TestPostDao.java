@@ -95,6 +95,10 @@ public class TestPostDao {
         assertEquals(CREATED_DATE, found.getCreatedDate());
         assertEquals(null, found.getPublishedDate());
         assertEquals(Collections.emptyList(), found.getComments());
+
+        assertEquals(4, postDao.findAll().size());
+        assertEquals(2, userDao.findAll().size());
+        assertEquals(2, commentDao.findAll().size());
     }
 
     @Test

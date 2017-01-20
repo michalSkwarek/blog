@@ -9,7 +9,6 @@
     <p>Text:</p>
     <form:errors path="text" />
     <form:input path="text" id="text"/>
-    <%--<textarea name="text" rows="10"></textarea>--%>
 
     <button type="submit" class="save btn btn-default">Send</button>
 </form:form>
