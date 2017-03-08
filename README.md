@@ -1,5 +1,5 @@
 # blog
-Blog platform from a tutorial https://tutorial.djangogirls.org/pl/ moved to the old java technologies
+A blog has moved from a tutorial https://tutorial.djangogirls.org/pl/ to old Java/JS technologies
 ### Technologies
 - Java 7
 - Spring 4 (MVC, Security, Test)
